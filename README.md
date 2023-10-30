@@ -39,8 +39,8 @@
 - Animations for class features and other feats
   
 ## **SPECIAL THANKS TO:**
-  [OTIGON](https://www.patreon.com/otigon) - AUTOMATED ANIMATIONS
-  [CHRIS](https://ko-fi.com/chrisk123999) - CHRIS'S PREMADES
-  [FANTASY COMPUTER WORKS](https://ko-fi.com/fantasycomputerworks) - SEQUENCER
-  [JULES AND BEN](https://www.patreon.com/JB2A) - JB2A
-  [TPOSNEY](https://ko-fi.com/tposney) - MIDI-QOL
+[OTIGON](https://www.patreon.com/otigon) - AUTOMATED ANIMATIONS\
+[CHRIS](https://ko-fi.com/chrisk123999) - CHRIS'S PREMADES\
+[FANTASY COMPUTER WORKS](https://ko-fi.com/fantasycomputerworks) - SEQUENCER\
+[JULES AND BEN](https://www.patreon.com/JB2A) - JB2A\
+[TPOSNEY](https://ko-fi.com/tposney) - MIDI-QOL
