@@ -43,6 +43,26 @@ let animations = {
         'hue': 189,
         'saturate': .80,
         'brightness': .75
+    },
+    'jb2a.particles.outward.greenyellow.02.01': {
+        'hue': 84,
+        'saturate': .51,
+        'brightness': .69
+    },
+    'jb2a.markers.bubble.intro.blue': {
+        'hue': 190,
+        'saturate': .57,
+        'brightness': .58
+    },
+    'jb2a.markers.bubble.outro.blue': {
+        'hue': 190,
+        'saturate': .57,
+        'brightness': .58
+    },
+    'jb2a.markers.runes03.dark_orange.01': {
+        'hue': 28,
+        'saturate': .98,
+        'brightness': .44
     }
 };
 let colors = {

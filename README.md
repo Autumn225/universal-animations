@@ -21,7 +21,7 @@
 ![vicious-mockery](docs/images/example3.gif)
   
 ### CURRENT FEATURES:
-- Animations for spell attacks, heals, and saves
+- Animations for spell attacks, heals, saves, ritual and utility spells.
 - Animation color based on spell school and damage flavor
 - Usable for D&D 5e system and Foundry versions 10 & 11
   
@@ -29,7 +29,6 @@
   
 ### UPCOMING FEATURES:
 - Settings menu to change colors and animations used for each animation.
-- Animations for utility spells
 - Animations for weapons, with variations for magic weapons
   
 ![ray-of-frost-two-targets](docs/images/example5.gif)
@@ -40,8 +39,8 @@
 - Animations for class features and other feats
   
 ## **SPECIAL THANKS TO:**
-[OTIGON](https://www.patreon.com/otigon) - AUTOMATED ANIMATIONS
-[CHRIS](https://ko-fi.com/chrisk123999) - CHRIS'S PREMADES
-[FANTASY COMPUTER WORKS](https://ko-fi.com/fantasycomputerworks) - SEQUENCER
-[JULES AND BEN](https://www.patreon.com/JB2A) - JB2A
-[TPOSNEY](https://ko-fi.com/tposney) - MIDI-QOL
+  [OTIGON](https://www.patreon.com/otigon) - AUTOMATED ANIMATIONS
+  [CHRIS](https://ko-fi.com/chrisk123999) - CHRIS'S PREMADES
+  [FANTASY COMPUTER WORKS](https://ko-fi.com/fantasycomputerworks) - SEQUENCER
+  [JULES AND BEN](https://www.patreon.com/JB2A) - JB2A
+  [TPOSNEY](https://ko-fi.com/tposney) - MIDI-QOL

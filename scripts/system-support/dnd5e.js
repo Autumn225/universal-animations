@@ -1,6 +1,7 @@
 import { uaHandler } from "../handlers/ua-handler.js";
 import { getRequiredData } from "./getRequiredData.js";
 import { constants } from "../lib/constants.js";
+import { defaultPreferences } from "../lib/defaultPreferences.js";
 
 export function systemHooks() {
     if (game.modules.get("midi-qol")?.active) {
@@ -30,7 +31,7 @@ export function systemHooks() {
                 save(newData);
             }
         });
-        // Items with no Attack/Damage
+        // Items with no Attack/Damage (Probably won't be used)
         Hooks.on("midi-qol.RollComplete", (workflow) => {
             if (workflow.item?.hasAreaTarget || workflow.item?.hasAttack || workflow.item?.hasDamage) { return };
             useItem(getWorkflowData(workflow))
@@ -72,7 +73,7 @@ export function systemHooks() {
     async function attack(data) {
         data.actionType = data.item.system.actionType;
         data.itemType = data.item.type;
-        getDamageFlavors(data);
+        getInfo(data);
         if (data.itemType === 'spell') {
             data.spellSchool = data.item.system?.school;
         }
@@ -81,14 +82,14 @@ export function systemHooks() {
     async function postHit(data) {
         data.actionType = data.item.system.actionType;
         data.itemType = data.item.type;
-        getDamageFlavors(data);
+        getInfo(data);
         getOutcome(data);
         await uaHandler.initialize(data, 'postHit');
     }
     async function damage(data) {
         data.actionType = data.item.system.actionType;
         data.itemType = data.item.type;
-        getDamageFlavors(data);
+        getInfo(data);
         getOutcome(data);
         await uaHandler.initialize(data, 'damage');
     }
@@ -98,11 +99,11 @@ export function systemHooks() {
         if (saveData.itemType === 'spell') {
             saveData.spellSchool = saveData.item.system?.school;
         }
-        getDamageFlavors(saveData);
+        getInfo(saveData);
         await uaHandler.initialize(saveData, 'save')
     }
     function useItem() {
-        //currently does nothing
+        // currently does nothing, probably won't be used. Left over from AA
     }
     function getWorkflowData(workflow) {
         return {
@@ -113,7 +114,18 @@ export function systemHooks() {
             'workflow': workflow    
         }
     }
-    function getDamageFlavors(data) {
+    function getInfo(data) { // Gets properties that are used within animations
+        data.isRitual = data.item.system?.components?.ritual;
+        let conditions = new Set();
+        data.item?.effects.forEach(e => {
+            Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
+                if ([e?.label?.toLowerCase(), e?.name?.toLowerCase()].includes(c)) conditions.add(c)
+            });
+            e.changes.filter(ch => ['StatusEffect', 'StatusEffectLabel', 'macro.CE'].includes(ch.key)).forEach(ch =>  Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
+                if (ch.value.toLowerCase().includes(c)) conditions.add(c);
+            }));
+        });
+        data.conditions = conditions;
         if (!data.item.hasDamage) return;
         let damageFlavors = [];
         for (let i = 0; data.item.system.damage.parts.length > i; i++) {
@@ -136,5 +148,8 @@ export function systemHooks() {
                 i.isHit = data?.rollAttackHook?.roll?.total ?? 100 >= i.actor.system.attributes.ac.value;
             }
         }
+    }
+    function templateAnimation(data) {
+        // Currently does nothing, I've got to think about what to do with templates. Suggestions welcome.
     }
 }

@@ -13,6 +13,36 @@ async function cast(data) {
                 .playbackRate(0.75)
                 .waitUntilFinished()
             .play();
+    } else if (data.isRitual) {
+        let animationIntro = 'jb2a.magic_signs.circle.02.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.intro.' + defaultPreferences.spellSchools[data.spellSchool].color;
+        let animationOutro = 'jb2a.magic_signs.circle.02.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.outro.' + defaultPreferences.spellSchools[data.spellSchool].color;
+        new Sequence()
+            .effect()
+                .file('jb2a.particles.outward.greenyellow.02.01')
+                .filter('ColorMatrix', colorMatrix('jb2a.particles.outward.greenyellow.02.01', data.spellSchool))
+                .atLocation(data.token)
+                .scaleToObject(3)
+                .playbackRate(.8)
+                .delay(500)
+                .duration(5500)
+                .fadeIn(3000)
+                .opacity(0.5)
+                .fadeOut(2000)
+                .scaleIn(0, 2000)
+            .effect()
+                .file(animationIntro)
+                .atLocation(data.token)
+                .scaleToObject(2.5)
+                .playbackRate(1)
+                .belowTokens()
+                .waitUntilFinished(-1000)
+            .effect()
+                .file(animationOutro)
+                .atLocation(data.token)
+                .playbackRate(1)
+                .scaleToObject(2.5)
+                .belowTokens()
+            .play();
     } else {
         await new Sequence()
             .effect()
@@ -27,11 +57,14 @@ async function cast(data) {
     if (data.actionType === 'save') {
         await save(data);
         return;
+    } else if (['other', 'util'].includes(data.actionType) && data.targets.length > 0) {
+        utility(data);
+        return;
     }
     async function save(data) {
         await new Promise (async resolve => {
             setTimeout(resolve, 1250);
-            let color = data.damageFlavors[0] ?? data.spellSchool;
+            let color = data?.damageFlavors[0] ?? data.spellSchool;
             for (let i of data.targets) {
                 new Sequence()
                     .effect()
@@ -51,6 +84,88 @@ async function cast(data) {
                     .play();
             }
         })
+    }
+    function utility(data) {
+        for (let i of data.targets) {
+            let animationIntro = 'jb2a.magic_signs.circle.02.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.intro.' + defaultPreferences.spellSchools[data.spellSchool].color;
+            let animationOutro = 'jb2a.magic_signs.circle.02.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.outro.' + defaultPreferences.spellSchools[data.spellSchool].color;
+            new Sequence()
+                .effect()
+                    .file(animationIntro)
+                    .atLocation(i)
+                    .scaleToObject(1.5)
+                    .playbackRate(1)
+                    .belowTokens()
+                    .waitUntilFinished(-1000)
+                .effect()
+                    .file(animationOutro)
+                    .atLocation(i)
+                    .playbackRate(1)
+                    .scaleToObject(1.5)
+                    .belowTokens()
+                .play();
+        }
+        if (data.conditions.size > 0) { // For conditions
+            for (let condition of data.conditions) {
+                for (let i of data.targets) {
+                    if (defaultPreferences.conditionAbrevs[condition].fade === true) {
+                        new Sequence()
+                            .effect()
+                                .file(defaultPreferences.conditionAbrevs[condition].file)
+                                .atLocation(i)
+                                .scaleToObject(1.5)
+                                .playbackRate(.8)
+                                .delay(500)
+                                .duration(5500)
+                                .fadeIn(3000)
+                                .fadeOut(2000)
+                            .play();
+                    } else {
+                        new Sequence()
+                           .effect()
+                                .file(defaultPreferences.conditionAbrevs[condition].file)
+                                .atLocation(i)
+                                .scaleToObject(1.5)
+                                .playbackRate(1)
+                                .delay(500)
+                            .play();
+                    }
+                }
+            }
+        } else { // Based on disposition
+            for (let i of data.targets) {
+                if (i.document.disposition === data.token.document.disposition) {
+                    new Sequence()
+                        .effect()
+                            .file('jb2a.markers.bubble.intro.blue')
+                            .filter('ColorMatrix', colorMatrix('jb2a.markers.bubble.intro.blue', data.spellSchool))
+                            .atLocation(i)
+                            .scaleToObject(1)
+                            .playbackRate(0.8)
+                            .waitUntilFinished(-1000)
+                        .effect()
+                            .file('jb2a.markers.bubble.outro.blue')
+                            .filter('ColorMatrix', colorMatrix('jb2a.markers.bubble.outro.blue', data.spellSchool))
+                            .atLocation(i)
+                            .playbackRate(0.8)
+                            .scaleToObject(1)
+                        .play();
+                } else {
+                    new Sequence()
+                        .effect()
+                            .file('jb2a.markers.runes03.dark_orange.01')
+                            .filter('ColorMatrix', colorMatrix('jb2a.markers.runes03.dark_orange.01', data.spellSchool))
+                            .atLocation(i)
+                            .scaleToObject(1.5)
+                            .playbackRate(.8)
+                            .delay(500)
+                            .duration(5500)
+                            .fadeIn(3000)
+                            .fadeOut(2000)
+                        .play();
+                }
+            }
+        }
     }
 }
 async function attack(data) {
@@ -137,37 +252,40 @@ async function damage(data) {
     }
     async function heal(data) {
         for (let i of data.targets) {
-            await new Sequence()
-                .effect()
-                    .file('jb2a.energy_strands.in.green.01.2')
-                    .filter('ColorMatrix', colorMatrix('jb2a.energy_strands.in.green.01.0', data.spellSchool))
-                    .atLocation(i)
-                    .scaleToObject(2)
-                    .playbackRate(1)
-                    .waitUntilFinished(-300)
-                .effect()
-                    .file('jb2a.healing_generic.burst.greenorange')
-                    .filter('ColorMatrix', colorMatrix('jb2a.energy_strands.in.green.01.0', data.spellSchool))
-                    .atLocation(i)
-                    .scaleToObject(2.5)
-                    .playbackRate(1)
-                    .waitUntilFinished(-2000)
-                .effect()
-                    .file('jb2a.energy_field.02.above.blue')
-                    .filter('ColorMatrix', colorMatrix('jb2a.energy_field.02.above.blue', data.spellSchool))
-                    .duration(2300)
-                    .startTime(1200)
-                    .atLocation(i)
-                    .scaleToObject(1)
-                    .playbackRate(2.5)
-                .play();
+            new Promise(async resolve => {
+                await new Sequence()
+                    .effect()
+                        .file('jb2a.energy_strands.in.green.01.2')
+                        .filter('ColorMatrix', colorMatrix('jb2a.energy_strands.in.green.01.0', data.spellSchool))
+                        .atLocation(i)
+                        .scaleToObject(2)
+                        .playbackRate(1)
+                        .waitUntilFinished(-300)
+                    .effect()
+                        .file('jb2a.healing_generic.burst.greenorange')
+                        .filter('ColorMatrix', colorMatrix('jb2a.energy_strands.in.green.01.0', data.spellSchool))
+                        .atLocation(i)
+                        .scaleToObject(2.5)
+                        .playbackRate(1)
+                        .waitUntilFinished(-2000)
+                    .effect()
+                        .file('jb2a.energy_field.02.above.blue')
+                        .filter('ColorMatrix', colorMatrix('jb2a.energy_field.02.above.blue', data.spellSchool))
+                        .duration(2300)
+                        .startTime(1200)
+                        .atLocation(i)
+                        .scaleToObject(1)
+                        .playbackRate(2.5)
+                    .play();
+                resolve();
+            })
         }
     }
 }
 async function save(data) {
     if (data.outcome === false) {
         let animationIntro = 'jb2a.magic_signs.rune.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.intro.' + defaultPreferences.spellSchools[data.spellSchool].color;
-        let animationOutro = 'jb2a.magic_signs.rune.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.intro.' + defaultPreferences.spellSchools[data.spellSchool].color;
+        let animationOutro = 'jb2a.magic_signs.rune.' + defaultPreferences.spellSchools[data.spellSchool].name  + '.outro.' + defaultPreferences.spellSchools[data.spellSchool].color;
         new Sequence()
             .effect()
                 .file(animationIntro)
