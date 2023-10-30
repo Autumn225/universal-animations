@@ -46,13 +46,6 @@
     "styles": [
         "styles/module.css"
     ],
-    "languages": [
-        {
-        "lang": "en",
-        "name": "English",
-        "path": "languages/en.json"
-        }
-    ],
     "changelog": "https://github.com/autumn225/universal-animations/blob/master/CHANGELOG.md",
     "url": "https://github.com/autumn225/universal-animations/",
     "manifest": "#{MANIFEST}#",
