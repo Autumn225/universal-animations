@@ -207,7 +207,7 @@ async function attack(data) {
                         .stretchTo(i, {offset: {x: -0.5}, local: true, gridUnits: true})
                         .playbackRate(0.75)
                         .waitUntilFinished(-400)
-                        .missed(!i.isHit)
+                        .missed(!(data.hitTargetsIds.includes(i.id)))
                     .play();
             }
         })
@@ -224,7 +224,7 @@ async function damage(data) {
     return;
     async function ranged(data) {
         for (let i of data.targets) {
-            if (i.isHit) {
+            if ((data.hitTargetsIds.includes(i.id))) {
                 new Promise(async resolve => {
                 await new Sequence()
                     .effect()

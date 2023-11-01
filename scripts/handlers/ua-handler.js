@@ -62,7 +62,7 @@ async function clean() {
 }
 async function animationCheck(item) {
     if (item.flags?.autoanimations?.isEnabled || item.flags['chris-Premades']?.info?.hasAnimation) return true;
-    if (game.modules.get('autoanimations')?.active) {
+    if (game.modules.get('autoanimations')?.active && item.flags?.autoanimations?.isEnabled != false) {
         let name = item.name;
         let autorecSettings = [
             game.settings.get('autoanimations', 'aaAutorec-melee'),
@@ -74,6 +74,8 @@ async function animationCheck(item) {
             game.settings.get('autoanimations', 'aaAutorec-aefx')
         ]
         return autorecSettings.some(setting => setting.some(autoRec => name.toLowerCase().includes(autoRec.label.toLowerCase())));
+    } else if (item.flags?.itemacro?.macro?.command?.includes('new Sequence()')) {
+        return true;
     } else return false;
 }
 async function getDistance(data) {

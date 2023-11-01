@@ -90,121 +90,216 @@ const conditionsAbrevs = { // Some are named weird to account for base system st
         'fade': false
     }
 }
-const conditionsFull = {
-    'blinded': {
-        'StatusEffect': [
-            'blind',
-            'Convenient Effect: Blinded'
-        ],
-        'macro.CE': 'Blinded',
-        'label': 'Blind'
+const baseWeapons = {
+    'club': {
+        'animations': [
+            'jb2a.club.melee.01.white.0',
+            'jb2a.club.melee.01.white.1',
+            'jb2a.club.melee.01.white.2',
+            'jb2a.club.melee.01.white.3',
+            'jb2a.club.melee.01.white.4',
+            'jb2a.club.melee.01.white.5'
+        ]
     },
-    'charmed': {
-        'StatusEffect': [
-            'charmed',
-            'Convient Effect: Charmed'
-        ],
-        'macro.CE': 'Charmed',
-        'label': 'Charmed'
+    'dagger': {
+        'animations': {
+            'melee': ['jb2a.dagger.melee.02.white'],
+            'ranged': ['jb2a.dagger.throw.01.white']
+        }
     },
-    'deafened': {
-        'StatusEffect': [
-            'deaf',
-            'Convient Effect: Deafened'
-        ],
-        'macro.CE': 'Deafened',
-        'label': 'Deaf'
+    'greatclub': {
+        'animations': ['jb2a.greatclub.standard.white']
     },
-    'frightended': {
-        'StatusEffect': [
-            'fear',
-            'Convient Effect: Frightened'
-        ],
-        'macro.CE': 'Frightened',
-        'label': 'Frightened'
+    'handaxe': {
+        'animations': {
+            'melee': ['jb2a.handaxe.melee.standard.white'],
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options'
+        }
     },
-    'grappled': {
-        'StatusEffect': [
-            'grappled',
-            'Convient Effect: Grappled'
-        ],
-        'macro.CE': 'Grappled',
-        'label': 'Grappled'
+    'javelin': {
+        'animations': {
+            'ranged': ['jb2a.arrow.physical.white.01'], // Needs patreon options
+            'melee': [
+                'jb2a.spear.melee.01.white.0',
+                'jb2a.spear.melee.01.white.1', // Needs patreon options
+                'jb2a.spear.melee.01.white.2',
+                'jb2a.spear.melee.01.white.3',
+                'jb2a.spear.melee.01.white.4',
+                'jb2a.spear.melee.01.white.5'
+            ]
+        }
     },
-    'incapacitated': {
-        'StatusEffect': [
-            'incapacitated',
-            'Convient Effect: Incapacitated'
-        ],
-        'macro.CE': 'Incapacitated',
-        'label': 'Incapacitated'
+    'lighthammer': {
+        'animations': {
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options
+            'melee': [
+                'jb2a.spear.melee.01.white.0',
+                'jb2a.spear.melee.01.white.1',
+                'jb2a.spear.melee.01.white.2',
+                'jb2a.spear.melee.01.white.3',
+                'jb2a.spear.melee.01.white.4',
+                'jb2a.spear.melee.01.white.5'
+            ]
+        }
     },
-    'invisible': {
-        'StatusEffect': [
-            'invisible',
-            'Convient Effect: Invisible'
-        ],
-        'macro.CE': 'Invisible',
-        'label': 'Invisible'
+    'mace': {
+        'animations': [
+            'jb2a.mace.melee.01.white.0',
+            'jb2a.mace.melee.01.white.1',
+            'jb2a.mace.melee.01.white.2',
+            'jb2a.mace.melee.01.white.3',
+            'jb2a.mace.melee.01.white.4',
+            'jb2a.mace.melee.01.white.5'
+        ]
     },
-    'paralyzed': {
-        'StatusEffect': [
-            'paralysis',
-            'Convient Effect: Paralysis'
-        ],
-        'macro.CE': 'Paralyzed',
-        'label': 'Paralyzed'
+    'quarterstaff': {
+        'animations': [
+            'jb2a.quarterstaff.melee.01.white.0',
+            'jb2a.quarterstaff.melee.01.white.1',
+            'jb2a.quarterstaff.melee.01.white.2',
+            'jb2a.quarterstaff.melee.01.white.3',
+            'jb2a.quarterstaff.melee.01.white.4',
+            'jb2a.quarterstaff.melee.01.white.5'
+        ]
     },
-    'petrified': {
-        'StatusEffect': [
-            'petrified',
-            'Convient Effect: Petrified'
-        ],
-        'macro.CE': 'Petrified',
-        'label': 'Petrified'
+    'sickle': {
+        'animations': [
+            'jb2a.melee_attack.01.sickle.01.0',
+            'jb2a.melee_attack.01.sickle.01.1',
+            'jb2a.melee_attack.01.sickle.01.2',
+            'jb2a.melee_attack.01.sickle.01.3'
+        ]
     },
-    'poisoned': {
-        'StatusEffect': [
-            'poison',
-            'Convient Effect: Poisoned'
-        ],
-        'macro.CE': 'Poisoned',
-        'label': 'Poisoned'
+    'spear': {
+        'animations': {
+            'ranged': ['jb2a.arrow.physical.white.01'], // Needs patreon options
+            'melee': [
+                'jb2a.spear.melee.01.white.0',
+                'jb2a.spear.melee.01.white.1',
+                'jb2a.spear.melee.01.white.2',
+                'jb2a.spear.melee.01.white.3',
+                'jb2a.spear.melee.01.white.4',
+                'jb2a.spear.melee.01.white.5'
+            ]
+        }
     },
-    'prone': {
-        'StatusEffect': [
-            'prone',
-            'Convient Effect: Prone'
-        ],
-        'macro.CE': 'Prone',
-        'label': 'Prone'
+    'battleaxe': {
+        'animations': [
+            'jb2a.melee_attack.02.battleaxe.01.0',
+            'jb2a.melee_attack.02.battleaxe.01.1',
+            'jb2a.melee_attack.02.battleaxe.01.2',
+            'jb2a.melee_attack.02.battleaxe.01.3'
+        ]
+    }, // No flail animation
+    'glaive': {
+        'animations': [
+            'jb2a.glaive.melee.01.white.0',
+            'jb2a.glaive.melee.01.white.1',
+            'jb2a.glaive.melee.01.white.2',
+            'jb2a.glaive.melee.01.white.3',
+            'jb2a.glaive.melee.01.white.4',
+            'jb2a.glaive.melee.01.white.5'
+        ]
     },
-    'restrained': {
-        'StatusEffect': [
-            'restrain',
-            'Convient Effect: Restrained'
-        ],
-        'macro.CE': 'Restrained',
-        'label': 'Restrained'
+    'greataxe': {
+        'animations': ['jb2a.greataxe.melee.standard.white']
     },
-    'stunned': {
-        'StatusEffect': [
-            'stun',
-            'Convient Effect: Stunned'
-        ],
-        'macro.CE': 'Stunned',
-        'label': 'Stunned'
+    'greatsword': {
+        'animations': ['jb2a.greatsword.melee.standard.white']
     },
-    'unconscious': {
-        'StatusEffect': [
-            'unconscious',
-            'Convient Effect: Unconscious'
-        ],
-        'macro.CE': 'Unconscious',
-        'label': 'Unconscious'
+    'halberd': {
+        'animations': [
+            'jb2a.halberd.melee.01.white.0',
+            'jb2a.halberd.melee.01.white.1',
+            'jb2a.halberd.melee.01.white.2',
+            'jb2a.halberd.melee.01.white.3',
+            'jb2a.halberd.melee.01.white.4',
+            'jb2a.halberd.melee.01.white.5'
+        ]
+    }, // No lance animationsword
+    'longsword': {
+        'animations': [
+            'jb2a.sword.melee.01.white.0',
+            'jb2a.sword.melee.01.white.1',
+            'jb2a.sword.melee.01.white.2',
+            'jb2a.sword.melee.01.white.3',
+            'jb2a.sword.melee.01.white.4',
+            'jb2a.sword.melee.01.white.5'
+        ]
     },
+    'maul': {
+        'animations': ['jb2a.maul.melee.standard.white']
+    },
+    'morningstar': { // No morningstar animation, substitute mace
+        'animations': [
+            'jb2a.mace.melee.01.white.0',
+            'jb2a.mace.melee.01.white.1',
+            'jb2a.mace.melee.01.white.2',
+            'jb2a.mace.melee.01.white.3',
+            'jb2a.mace.melee.01.white.4',
+            'jb2a.mace.melee.01.white.5'
+        ]
+    },
+    'pike': { // No pike animation, substitue pike
+        'animations': [
+            'jb2a.spear.melee.01.white.0',
+            'jb2a.spear.melee.01.white.1',
+            'jb2a.spear.melee.01.white.2',
+            'jb2a.spear.melee.01.white.3',
+            'jb2a.spear.melee.01.white.4',
+            'jb2a.spear.melee.01.white.5'
+        ]
+    },
+    'rapier': {
+        'animations': [
+            'jb2a.rapier.melee.01.white.0',
+            'jb2a.rapier.melee.01.white.1',
+            'jb2a.rapier.melee.01.white.2',
+            'jb2a.rapier.melee.01.white.3',
+            'jb2a.rapier.melee.01.white.4',
+            'jb2a.rapier.melee.01.white.5'
+        ]
+    },
+    'scimitar': {
+        'animations': [
+            'jb2a.scimitar.melee.01.white.0',
+            'jb2a.scimitar.melee.01.white.1',
+            'jb2a.scimitar.melee.01.white.2',
+            'jb2a.scimitar.melee.01.white.3',
+            'jb2a.scimitar.melee.01.white.4',
+            'jb2a.scimitar.melee.01.white.5'
+        ]
+    },
+    'shortsword': {
+        'animations': [
+            'jb2a.shortsword.melee.01.white.0',
+            'jb2a.shortsword.melee.01.white.1',
+            'jb2a.shortsword.melee.01.white.2',
+            'jb2a.shortsword.melee.01.white.3',
+            'jb2a.shortsword.melee.01.white.4',
+            'jb2a.shortsword.melee.01.white.5'
+        ]
+    },
+    'trident': {
+        'moveTowards': true,
+        'animations': ['jb2a.spiritual_weapon.trident.01.spectral.02.green']
+    }, // No animation for war pick
+    'warhammer': {
+        'animations': [
+            'jb2a.warhammer.melee.01.white.0',
+            'jb2a.warhammer.melee.01.white.1',
+            'jb2a.warhammer.melee.01.white.2',
+            'jb2a.warhammer.melee.01.white.3',
+            'jb2a.warhammer.melee.01.white.4',
+            'jb2a.warhammer.melee.01.white.5'
+        ]
+    },
+    'whip': { // No animation for whip, substitute generic animation
+        'animations': ['jb2a.melee_generic.slash.01.orange.0']
+    }
 }
 export let defaultPreferences = {
     'spellSchools': spellSchools,
-    'conditionAbrevs': conditionsAbrevs
+    'conditionAbrevs': conditionsAbrevs,
+    'baseWeapons': baseWeapons
 }

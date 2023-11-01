@@ -126,6 +126,7 @@ export function systemHooks() {
             }));
         });
         data.conditions = conditions;
+        if (data.item.system.baseItem) data.baseItem = data.item.system.baseItem;
         if (!data.item.hasDamage) return;
         let damageFlavors = [];
         for (let i = 0; data.item.system.damage.parts.length > i; i++) {
@@ -134,18 +135,15 @@ export function systemHooks() {
         }
         data.damageFlavors = damageFlavors;
     }
-    function getOutcome(data) {
+    async function getOutcome(data) {
+        data.hitTargetsIds = [];
         if (game.modules.get("midi-qol")?.active) {
             data.isCritical = data.workflow.isCritical;
-            for (let i of data.targets) {
-                for (let j of data.workflow.hitTargets) {
-                    if (i == j) i.isHit = true;
-                }
-            }
+            data.hitTargetsIds = Array.from(data.workflow.hitTargets).map(token => token.id);
         } else {
             if (data?.rollAttackHook?.roll?.isCritical || data?.rollDamageHook?.roll?.isCritical) data.isCritical = true;
             for (let i of data.targets) {
-                i.isHit = data?.rollAttackHook?.roll?.total ?? 100 >= i.actor.system.attributes.ac.value;
+                if (data?.rollAttackHook?.roll?.total ?? 100 >= i.actor.system.attributes.ac.value) data.hitTargetsIds.push(i.id);
             }
         }
     }

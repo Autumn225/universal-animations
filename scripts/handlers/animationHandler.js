@@ -1,4 +1,5 @@
-import { spells } from "../animations/spells.js"
+import { spells } from '../animations/spells.js'
+import { weapons } from '../animations/weapons.js'
 import { debug } from '../lib/debugger.js'
 export async function animationHandler(data, state) {
     debug('Animation Handler: type ' + state + ' for ' + data.targets[0]);
@@ -18,6 +19,24 @@ export async function animationHandler(data, state) {
             }
             case 'save': {
                 await spells.save(data)
+            }
+        }
+    } else if (data.itemType === 'weapon') {
+        switch (state) {
+            case 'attack': {
+                await weapons.attack(data)
+                break;
+            }
+            case 'postHit': {
+                await weapons.postHit(data)
+                break;
+            }
+            case 'damage': {
+                await weapons.damage(data)
+                break;
+            }
+            case 'save': {
+
             }
         }
     }

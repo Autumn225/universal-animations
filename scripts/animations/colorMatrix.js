@@ -63,6 +63,21 @@ let animations = {
         'hue': 28,
         'saturate': .98,
         'brightness': .44
+    },
+    'jb2a.impact.008.orange': {
+        'hue': 49,
+        'saturate': .92,
+        'brightness': .49
+    },
+    'jb2a.impact.water.02.blue.0': {
+        'hue': 217,
+        'saturate': .43,
+        'brightness': .67
+    },
+    'jb2a.liquid.splash.blue': {
+        'hue': 210,
+        'saturate': .64,
+        'brightness': .61
     }
 };
 let colors = {
