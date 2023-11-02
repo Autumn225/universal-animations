@@ -25,13 +25,12 @@
 - Animation color based on spell school and damage flavor
 - Animations for weapon attacks, based on base item, damage flavor, and hit/miss/crit
 - Usable for D&D 5e system and Foundry versions 10 & 11
-- Will recognize sequencer animations in ItemMacros and from other modules and not play.
+- Will recognize animations from other modules and not play, can be overridden per item as well.
   
 ![produce-flame-melee-crit](docs/images/example2.gif)
   
 ### UPCOMING FEATURES:
-- JB2A Pateron weapon animations.
-- Way to disable/enable UAs on a per item basis.
+- Option to hide UA button on items.
 - Weapon animations for ranged weapons base on ammunition used.
 - Weapon animation variations for magic weapons, extra damage types, and saves.
 - Settings menu to change colors and animations used for each animation.

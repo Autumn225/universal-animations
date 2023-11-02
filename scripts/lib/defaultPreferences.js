@@ -104,7 +104,11 @@ const baseWeapons = {
     'dagger': {
         'animations': {
             'melee': ['jb2a.dagger.melee.02.white'],
-            'ranged': ['jb2a.dagger.throw.01.white']
+            'ranged': ['jb2a.dagger.throw.01.white'],
+            'patreon': {
+                'melee': ['jb2a.dagger.melee.fire.white'],
+                'ranged': ['jb2a.dagger.throw.02.white']
+            }
         }
     },
     'greatclub': {
@@ -113,25 +117,16 @@ const baseWeapons = {
     'handaxe': {
         'animations': {
             'melee': ['jb2a.handaxe.melee.standard.white'],
-            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options'
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'],
+            'patreon': {
+                'melee': ['jb2a.handaxe.melee.standard.white'],
+                'ranged': ['jb2a.handaxe.throw.02']
+            }
         }
     },
     'javelin': {
         'animations': {
-            'ranged': ['jb2a.arrow.physical.white.01'], // Needs patreon options
-            'melee': [
-                'jb2a.spear.melee.01.white.0',
-                'jb2a.spear.melee.01.white.1', // Needs patreon options
-                'jb2a.spear.melee.01.white.2',
-                'jb2a.spear.melee.01.white.3',
-                'jb2a.spear.melee.01.white.4',
-                'jb2a.spear.melee.01.white.5'
-            ]
-        }
-    },
-    'lighthammer': {
-        'animations': {
-            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options
+            'ranged': ['jb2a.arrow.physical.white.01'],
             'melee': [
                 'jb2a.spear.melee.01.white.0',
                 'jb2a.spear.melee.01.white.1',
@@ -139,7 +134,42 @@ const baseWeapons = {
                 'jb2a.spear.melee.01.white.3',
                 'jb2a.spear.melee.01.white.4',
                 'jb2a.spear.melee.01.white.5'
-            ]
+            ],
+            'patreon': {
+                'melee': [
+                    'jb2a.spear.melee.01.white.0',
+                    'jb2a.spear.melee.01.white.1', // Actual Melee options don't exsist...
+                    'jb2a.spear.melee.01.white.2',
+                    'jb2a.spear.melee.01.white.3',
+                    'jb2a.spear.melee.01.white.4',
+                    'jb2a.spear.melee.01.white.5'
+                ],
+                'ranged': ['jb2a.javelin.01.throw']
+            }
+        }
+    },
+    'lighthammer': {
+        'animations': {
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options
+            'melee': [
+                'jb2a.hammer.melee.01.white.0',
+                'jb2a.hammer.melee.01.white.1',
+                'jb2a.hammer.melee.01.white.2',
+                'jb2a.hammer.melee.01.white.3',
+                'jb2a.hammer.melee.01.white.4',
+                'jb2a.hammer.melee.01.white.5'
+            ],
+            'patreon': {
+                'melee': [
+                    'jb2a.hammer.melee.01.white.0',
+                    'jb2a.hammer.melee.01.white.1',
+                    'jb2a.hammer.melee.01.white.2',
+                    'jb2a.hammer.melee.01.white.3',
+                    'jb2a.hammer.melee.01.white.4',
+                    'jb2a.hammer.melee.01.white.5'
+                ],
+                'ranged': ['jb2a.hammer.throw.15ft']
+            }
         }
     },
     'mace': {
@@ -180,7 +210,18 @@ const baseWeapons = {
                 'jb2a.spear.melee.01.white.3',
                 'jb2a.spear.melee.01.white.4',
                 'jb2a.spear.melee.01.white.5'
-            ]
+            ],
+            'patreon': {
+                'melee': [
+                    'jb2a.spear.melee.01.white.0',
+                    'jb2a.spear.melee.01.white.1',
+                    'jb2a.spear.melee.01.white.2',
+                    'jb2a.spear.melee.01.white.3',
+                    'jb2a.spear.melee.01.white.4',
+                    'jb2a.spear.melee.01.white.5'
+                ],
+                'ranged': ['jb2a.mace.throw.15ft']
+            }
         }
     },
     'battleaxe': {
@@ -228,7 +269,13 @@ const baseWeapons = {
         ]
     },
     'maul': {
-        'animations': ['jb2a.maul.melee.standard.white']
+        'animations': ['jb2a.maul.melee.standard.white'],
+        'patreon': [
+            'jb2a.melee_attack.03.maul.01.0',
+            'jb2a.melee_attack.03.maul.01.1',
+            'jb2a.melee_attack.03.maul.01.2',
+            'jb2a.melee_attack.03.maul.01.3'
+        ]
     },
     'morningstar': { // No morningstar animation, substitute mace
         'animations': [

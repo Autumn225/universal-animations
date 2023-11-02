@@ -25,11 +25,15 @@ const nonDamageTypes = [
     'temphp',
     'midi-none'
 ];
+function jb2aCheck () {
+    return game.modules.get('jb2a_patreon')?.active ? 'patreon' : game.modules.get('JB2A_DnD5e')?.active ? 'free' : false;
+}
 export let constants = {
     'attacks': attacks,
     'meleeAttacks': meleeAttacks,
     'rangedAttacks': rangedAttacks,
     'weaponAttacks': weaponAttacks,
     'spellAttacks': spellAttacks,
-    'nonDamageTypes': nonDamageTypes
+    'nonDamageTypes': nonDamageTypes,
+    'jb2aCheck': jb2aCheck
 }

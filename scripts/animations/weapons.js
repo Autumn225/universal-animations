@@ -3,8 +3,10 @@ import { constants } from '../lib/constants.js';
 import { defaultPreferences } from "../lib/defaultPreferences.js";
 
 async function attack(data) {
+    let jb2a = constants.jb2aCheck;
     let animations = defaultPreferences?.baseWeapons[data.baseItem]?.animations;
     if (animations) {
+        if (jb2a === 'patreon') animations = animations['patreon'] ?? animations;
         let range;
         if (Object?.keys(animations).includes('ranged')) {
             range = data.distance > 5 ? 'ranged' : 'melee';
