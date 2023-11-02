@@ -1,11 +1,11 @@
 ## Release 0.0.5
-- Patereon animations for weapon attacks. This only includes regular weapons animations currently.
-  - Default dagger animation for patereon users is now "jb2a.dagger.melee.fire.white". The regular option included in the free version isn't supposed to exsist and is not included in the patreon version.
-- Replaced item macro animation finding method with title bar button to override animations per indiviual item.
+- Patreon animations for weapon attacks. This only includes regular weapons animations currently.
+  - Default dagger animation for patreon users is now "jb2a.dagger.melee.fire.white". The regular option included in the free version isn't supposed to exist and is not included in the patreon version.
+- Replaced item macro animation finding method with title bar button to override animations per individual item.
   - This can override in both directions. This option will be given priority in animation checking.
   - Icon is a globe, label is "UA". There will be a *future* setting to hide this button. Menu will eventually be expanded and will be made less ugly.
-- Added check for exsistence of a JB2A module.
-- Fixed misname for light hammer animations,
+- Added check for existence of a JB2A module.
+- Fixed misname for light hammer animations.
   
 ## Release 0.0.4
 - Animations for weapon attacks, uses base item for weapon, details based on hit/miss, damage type, and if critical.
