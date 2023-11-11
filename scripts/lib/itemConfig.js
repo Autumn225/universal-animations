@@ -1,5 +1,5 @@
 export function createHeaderButton(config, buttons) {
-    if (config.object instanceof Item && config.object?.actor) {
+    if (config.object instanceof Item) {
         buttons.unshift({
             'icon': 'fa-solid fa-globe',
             'class': 'universalAnimations',

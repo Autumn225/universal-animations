@@ -1,3 +1,15 @@
+# Release 0.1.0
+- Animations for ranged attacks, including guns.
+- Animations for unarmed strike.
+- Animations for nets.
+- Animations for magical weapon attacks.
+  - Will use JB2A Patreon arrows/bolts/bullets when applicable.
+  - Will add a glow effect to the weapon's animation.
+  - Animation for secondary damage types, as well as "other" damage.
+  - Animation for failed/success saves, animation based on condition applied and/or damage type.
+- UA title bar button will work on all items.
+- Fix for ranged weapon animations.
+  
 ## Release 0.0.5
 - Patreon animations for weapon attacks. This only includes regular weapons animations currently.
   - Default dagger animation for patreon users is now "jb2a.dagger.melee.fire.white". The regular option included in the free version isn't supposed to exist and is not included in the patreon version.

@@ -40,7 +40,7 @@ export function systemHooks() {
         Hooks.on("dnd5e.preDisplayCard", async (item, options) => {
             let data = await getRequiredData({item, actor: item.actor, workflow: item})
             attack(data);
-            if (item.system.hasSave === true) {
+            if (item.system.hasSave === true) { // Need to add save from ammo
                 async function callback (actor, roll, abilityId) {
                     let itemUuid = await uaHandler.closeByActor(actor);
                     if (!itemUuid) return false;
@@ -116,6 +116,7 @@ export function systemHooks() {
     }
     function getInfo(data) { // Gets properties that are used within animations
         data.isRitual = data.item.system?.components?.ritual;
+        data.properties = data.item.system?.properties;
         let conditions = new Set();
         data.item?.effects.forEach(e => {
             Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
@@ -127,17 +128,31 @@ export function systemHooks() {
         });
         data.conditions = conditions;
         if (data.item.system.baseItem) data.baseItem = data.item.system.baseItem;
-        if (!data.item.hasDamage) return;
-        let damageFlavors = [];
-        for (let i = 0; data.item.system.damage.parts.length > i; i++) {
-            let flavor = data.item.system.damage.parts[i][1];
-            if (damageFlavors.includes(flavor.toLowerCase()) === false && !constants.nonDamageTypes.includes(flavor.toLowerCase())) damageFlavors.push(flavor);
+        if (data.item.system.properties.fir) {
+            if (data.item.system.damage.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
+            else if (data.item.system.damage.parts[0][0].charAt(0) == 2) data.baseItem = 'firearmModern';
+            else if (['necrotic', 'radiant'].includes(data.item.system.damage.parts[0][1])) data.baseItem = 'firearmFuturistic';
         }
-        data.damageFlavors = damageFlavors;
+        if (data.item.system.rarity) data.itemRarity = data.item.system.rarity;
+        data.hasAmmunition = data.item.system?.properties?.amm;
+        if (data.hasAmmunition && data.item.system?.consume?.target) getAmmoInfo(data);
+        if (data.item.hasDamage) {
+            let damageFlavors = [];
+            for (let i = 0; data.item.system.damage.parts.length > i; i++) {
+                let flavor = data.item.system.damage.parts[i][1];
+                if (damageFlavors.includes(flavor.toLowerCase()) === false && !constants.nonDamageTypes.includes(flavor.toLowerCase())) damageFlavors.push(flavor);
+            }
+            data.damageFlavors = damageFlavors;
+            if (data.item.system?.formula) {
+                data.otherDamageFlavors = Object.keys(defaultPreferences.glows).filter(i => data.item.system.formula.includes(i));
+                data.otherDamageHalfDamage = data.item.system.flags?.midiProperties?.halfdam ?? false
+            }
+        }
+        data.willGlow ??= data?.damageFlavors?.length > 1 ? true : data?.otherDamageFlavors ? true : Object.entries(data.item.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : data.item.system?.rarity ? true : false;
     }
     async function getOutcome(data) {
         data.hitTargetsIds = [];
-        if (game.modules.get("midi-qol")?.active) {
+        if (game.modules.get('midi-qol')?.active) {
             data.isCritical = data.workflow.isCritical;
             data.hitTargetsIds = Array.from(data.workflow.hitTargets).map(token => token.id);
         } else {
@@ -146,6 +161,47 @@ export function systemHooks() {
                 if (data?.rollAttackHook?.roll?.total ?? 100 >= i.actor.system.attributes.ac.value) data.hitTargetsIds.push(i.id);
             }
         }
+    }
+    function getAmmoInfo (data) {
+        let ammoItem = data.token.actor.items.get(data.item.system?.consume?.target);
+        if (!ammoItem) return;
+        data.ammo = {
+            'name': ammoItem.name,
+            'attackBonus': ammoItem.system.attackBonus,
+            'properties': ammoItem.system.properties,
+            'rarity': ammoItem.system.rarity,
+            'save': ammoItem.system.save,
+            'ammoType': null
+        }
+        switch (data.baseItem) {
+            case 'lightcrossbow':
+            case 'handcrossbow':
+            case 'heavycrossbow':
+                data.ammoType = 'bolt'
+                break;
+            case 'shortbow':
+            case 'longbow':
+                data.ammoType = 'arrow'
+                break;
+            case 'firearmRenaissance':
+                data.ammoType = 'bullet02'
+                break;
+            case 'firearmModern':
+                data.ammoType = 'bullet01'
+                break;
+            case 'firearmFuturistic':
+                data.ammoType = 'lasershot'
+                break;
+        }
+        if (ammoItem.hasDamage) {
+            let damageFlavors = [];
+            for (let i = 0; data.item.system.damage.parts.length > i; i++) {
+                let flavor = data.item.system.damage.parts[i][1];
+                if (damageFlavors.includes(flavor.toLowerCase()) === false && !constants.nonDamageTypes.includes(flavor.toLowerCase())) damageFlavors.push(flavor);
+            }
+            data.ammo.damageFlavors = damageFlavors;
+        }
+        data.willGlow ??= data.ammo?.damageFlavors?.length > 1 ? true : Object.entries(ammoItem.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : ammoItem.system?.rarity ? true : false;
     }
     function templateAnimation(data) {
         // Currently does nothing, I've got to think about what to do with templates. Suggestions welcome.

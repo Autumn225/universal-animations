@@ -6,37 +6,37 @@ export async function animationHandler(data, state) {
     if (data.itemType === 'spell') {
         switch (state) {
             case 'attack': {
-                await spells.cast(data)
+                await spells.cast(data);
                 break;
             }
             case 'postHit': {
-                await spells.attack(data)
+                await spells.attack(data);
                 break;
             }
             case 'damage': {
-                await spells.damage(data)
+                await spells.damage(data);
                 break;
             }
             case 'save': {
-                await spells.save(data)
+                await spells.save(data);
             }
         }
     } else if (data.itemType === 'weapon') {
         switch (state) {
             case 'attack': {
-                await weapons.attack(data)
+                await weapons.attack(data);
                 break;
             }
             case 'postHit': {
-                await weapons.postHit(data)
+                await weapons.postHit(data);
                 break;
             }
             case 'damage': {
-                await weapons.damage(data)
+                await weapons.damage(data);
                 break;
             }
             case 'save': {
-
+                await weapons.save(data);
             }
         }
     }

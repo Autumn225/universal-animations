@@ -78,6 +78,26 @@ let animations = {
         'hue': 210,
         'saturate': .64,
         'brightness': .61
+    },
+    'jb2a.web.01': {
+        'hue': 40,
+        'saturate': .17,
+        'brightess': .86
+    },
+    'jb2a.eldritch_blast.purple': {
+        'hue': 288,
+        'saturate': .63,
+        'brightness': .64
+    },
+    'jb2a.particle_burst.01.circle.bluepurple': {
+        'hue': 239,
+        'saturate': .45,
+        'brightness': .74
+    },
+    'jb2a.swirling_leaves.outburst.01.pink': {
+        'hue': 307,
+        'saturate': .92,
+        'brightness': .85
     }
 };
 let colors = {
@@ -185,6 +205,16 @@ let colors = {
         'hue': 57,
         'saturate': 1,
         'brightness': .88
+    },
+    'net': {
+        'hue': 30,
+        'saturate': 1.5,
+        'brightness': .1
+    },
+    'mgc': {
+        'hue': 251,
+        'saturate': 1,
+        'brightness': .72
     }
 };
 let defaultMatrix = {

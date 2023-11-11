@@ -89,7 +89,7 @@ const conditionsAbrevs = { // Some are named weird to account for base system st
         'file': 'jb2a.swirling_sparkles.01.blue',
         'fade': false
     }
-}
+};
 const baseWeapons = {
     'club': {
         'animations': [
@@ -150,7 +150,7 @@ const baseWeapons = {
     },
     'lighthammer': {
         'animations': {
-            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'], // Needs patreon options
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'],
             'melee': [
                 'jb2a.hammer.melee.01.white.0',
                 'jb2a.hammer.melee.01.white.1',
@@ -168,7 +168,7 @@ const baseWeapons = {
                     'jb2a.hammer.melee.01.white.4',
                     'jb2a.hammer.melee.01.white.5'
                 ],
-                'ranged': ['jb2a.hammer.throw.15ft']
+                'ranged': ['jb2a.hammer.throw']
             }
         }
     },
@@ -202,7 +202,7 @@ const baseWeapons = {
     },
     'spear': {
         'animations': {
-            'ranged': ['jb2a.arrow.physical.white.01'], // Needs patreon options
+            'ranged': ['jb2a.arrow.physical.white.01'],
             'melee': [
                 'jb2a.spear.melee.01.white.0',
                 'jb2a.spear.melee.01.white.1',
@@ -220,7 +220,37 @@ const baseWeapons = {
                     'jb2a.spear.melee.01.white.4',
                     'jb2a.spear.melee.01.white.5'
                 ],
-                'ranged': ['jb2a.mace.throw.15ft']
+                'ranged': ['jb2a.spear.throw']
+            }
+        }
+    },
+    'lightcrossbow': {
+        'animations': {
+            'ranged': ['jb2a.bolt.physical.orange'],
+            'melee': ['jb2a.bolt.physical.orange'],
+            'patreon': {
+                'ranged': ['jb2a.bolt.physical.white02']
+            }
+        }
+    },
+    'dart': {
+        'animations': {
+            'ranged': ['jb2a.arrow.physical.white.01'],
+            'melee': ['jb2a.arrow.physical.white.01'],
+            'patreon': {
+                'ranged': ['jb2a.dart.01.throw.physical.white']
+            }
+        }
+    },
+    'shortbow': {
+        'animations': ['jb2a.arrow.physical.white.01']
+    },
+    'sling': {
+        'animations': {
+            'ranged': ['jb2a.throwable.launch.cannon_ball.01.black'],
+            'melee': ['jb2a.throwable.launch.cannon_ball.01.black'],
+            'patreon': {
+                'ranged': ['jb2a.slingshot']
             }
         }
     },
@@ -269,13 +299,16 @@ const baseWeapons = {
         ]
     },
     'maul': {
-        'animations': ['jb2a.maul.melee.standard.white'],
-        'patreon': [
-            'jb2a.melee_attack.03.maul.01.0',
-            'jb2a.melee_attack.03.maul.01.1',
-            'jb2a.melee_attack.03.maul.01.2',
-            'jb2a.melee_attack.03.maul.01.3'
-        ]
+        'animations': {
+            'melee': ['jb2a.maul.melee.standard.white'],
+            'ranged': ['jb2a.maul.melee.standard.white'],
+            'patreon': [
+                'jb2a.melee_attack.03.maul.01.0',
+                'jb2a.melee_attack.03.maul.01.1',
+                'jb2a.melee_attack.03.maul.01.2',
+                'jb2a.melee_attack.03.maul.01.3'
+            ]
+        }
     },
     'morningstar': { // No morningstar animation, substitute mace
         'animations': [
@@ -343,10 +376,211 @@ const baseWeapons = {
     },
     'whip': { // No animation for whip, substitute generic animation
         'animations': ['jb2a.melee_generic.slash.01.orange.0']
+    },
+    'handcrossbow': {
+        'animations': {
+            'ranged': ['jb2a.bolt.physical.orange'],
+            'melee': ['jb2a.bolt.physical.orange'],
+            'patreon': {
+                'ranged': ['jb2a.bolt.physical.white02']
+            }
+        }
+    },
+    'heavycrossbow': {
+        'animations': {
+            'ranged': ['jb2a.bolt.physical.orange'],
+            'melee': ['jb2a.bolt.physical.orange'],
+            'patreon': {
+                'ranged': ['jb2a.bolt.physical.white02']
+            }
+        }
+    },
+    'longbow': {
+        'animations': ['jb2a.arrow.physical.white.01'],
+    },
+    'firearmRenaissance': {
+        'animations': ['jb2a.bullet.02.orange']
+    },
+    'firearmModern': {
+        'animations': ['jb2a.bullet.01.orange']
+    },
+    'firearmFuturistic': {
+        'animations': ['jb2a.lasershot.blue']
     }
+};
+const patreonArrows = {
+    'acid': {
+        'animations': ['jb2a.arrow.physical.green']
+    },
+    'cold': {
+        'animations': ['jb2a.arrow.cold.blue']
+    },
+    'fire': {
+        'animations': ['jb2a.arrow.fire.orange']
+    },
+    'force': {
+        'animations': ['jb2a.arrow.physical.white.02']
+    },
+    'lightning': {
+        'animations': ['jb2a.arrow.lightning.blue']
+    },
+    'necrotic': {
+        'animations': ['jb2a.arrow.poison.purple']
+    },
+    'poison': {
+        'animations': ['jb2a.arrow.poison.green.02']
+    },
+    'psychic': {
+        'animations': ['jb2a.arrow.lightning.purple']
+    },
+    'radiant': {
+        'animations': ['jb2a.arrow.physical.orange']
+    },
+    'thunder': {
+        'animations': ['jb2a.arrow.lightning.orange']
+    },
+    'uncommon': {
+        'animations': ['jb2a.arrow.physical.green']
+    },
+    'rare': {
+        'animations': ['jb2a.arrow.physical.blue']
+    },
+    'veryRare': {
+        'animations': ['jb2a.arrow.physical.purple']
+    },
+    'legendary': {
+        'animations': ['jb2a.arrow.physical.orange']
+    },
+    'artifact': {
+        'animations': ['jb2a.arrow.physical.red']
+    }
+};
+const patreonBolts = {
+    'acid': {
+        'animations': ['jb2a.bolt.physical.green']
+    },
+    'cold': {
+        'animations': ['jb2a.bolt.cold.blue']
+    },
+    'fire': {
+        'animations': ['jb2a.bolt.fire.orange']
+    },
+    'force': {
+        'animations': ['jb2a.bolt.physical.white']
+    },
+    'lightning': {
+        'animations': ['jb2a.bolt.lightning.blue']
+    },
+    'necrotic': {
+        'animations': ['jb2a.bolt.poison.purple']
+    },
+    'poison': {
+        'animations': ['jb2a.bolt.poison.green.02']
+    },
+    'psychic': {
+        'animations': ['jb2a.bolt.lightning.purple']
+    },
+    'radiant': {
+        'animations': ['jb2a.bolt.physical.orange']
+    },
+    'thunder': {
+        'animations': ['jb2a.bolt.lightning.orange']
+    },
+    'uncommon': {
+        'animations': ['jb2a.bolt.physical.green']
+    },
+    'rare': {
+        'animations': ['jb2a.bolt.physical.blue']
+    },
+    'veryRare': {
+        'animations': ['jb2a.bolt.physical.purple']
+    },
+    'legendary': {
+        'animations': ['jb2a.bolt.physical.pink']
+    },
+    'artifact': {
+        'animations': ['jb2a.bolt.physical.red']
+    }
+};
+const pateronLasershots = {
+    'uncommon': {
+        'animations': ['jb2a.lasershot.green.30ft']
+    },
+    'rare': {
+        'animations': ['jb2a.lasershot.pink']
+    },
+    'veryRare': {
+        'animations': ['jb2a.lasershot.purple']
+    },
+    'legendary': {
+        'animations': ['jb2a.lasershot.orange']
+    },
+    'artifact': {
+        'animations': ['jb2a.lasershot.red']
+    }
+};
+const patreonBullets01 = {
+    'uncommon': {
+        'animations': ['jb2a.bullet.01.green']
+    },
+    'rare': {
+        'animations': ['jb2a.bullet.01.blue']
+    },
+    'veryRare': {
+        'animations': ['jb2a.bullet.01.purple']
+    },
+    'legendary': {
+        'animations': ['jb2a.bullet.01.orange']
+    },
+    'artifact': {
+        'animations': ['jb2a.bullet.01.red']
+    }
+};
+const patreonBullets02 = {
+    'uncommon': {
+        'animations': ['jb2a.bullet.02.green']
+    },
+    'rare': {
+        'animations': ['jb2a.bullet.02.blue']
+    },
+    'veryRare': {
+        'animations': ['jb2a.bullet.02.purple']
+    },
+    'legendary': {
+        'animations': ['jb2a.bullet.02.orange']
+    },
+    'artifact': {
+        'animations': ['jb2a.bullet.02.red']
+    }
+};
+const glows = {
+    'acid': '0x05FF0F',
+    'cold': '0x2196F3',
+    'fire': '0xFF8200',
+    'force': '0xF5F5F5',
+    'lightning': '0x4DD0E1',
+    'necrotic': '0x03001D',
+    'poison': '0x00880B',
+    'psychic': '0xBD66FF',
+    'radiant': '0xFFFA47',
+    'thunder': '0xFFFCC4',
+    'uncommon': '0x1FC219',
+    'rare': '0x4990E2',
+    'veryRare': '0x9810E0',
+    'legendary': '0xFEA227',
+    'artifact': '0xE34B39',
+    'ada': '0x66BB6A',
+    'sil': '0xB0BEC5',
+    'mgc': '0x886EFF'
 }
 export let defaultPreferences = {
     'spellSchools': spellSchools,
     'conditionAbrevs': conditionsAbrevs,
-    'baseWeapons': baseWeapons
+    'baseWeapons': baseWeapons,
+    'arrow': patreonArrows,
+    'bolt': patreonBolts,
+    'lasershot': pateronLasershots,
+    'bullet01': patreonBullets01,
+    'bullet02': patreonBullets02,
+    'glows': glows
 }
