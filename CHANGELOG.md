@@ -1,3 +1,8 @@
+## Release 0.1.1
+- Added coloring for weapon hits based on conditions.
+- Condition animations will now play from ammo as well.
+- Fixed typo bug that broke post hit weapon animations.
+  
 # Release 0.1.0
 - Animations for ranged attacks, including guns.
 - Animations for unarmed strike.

@@ -215,6 +215,76 @@ let colors = {
         'hue': 251,
         'saturate': 1,
         'brightness': .72
+    },
+    'blind': {
+        'hue': 182,
+        'saturate': 1,
+        'brightness': .94
+    },
+    'charmed': {
+        'hue': 303,
+        'saturate': .76,
+        'brightness': .69
+    },
+    'deaf': {
+        'hue': 8,
+        'saturate': 1,
+        'brightness': .38
+    },
+    'frightened': {
+        'hue': 267,
+        'saturate': .94,
+        'brightness': .56,
+    },
+    'fear': {
+        'hue': 267,
+        'saturate': .94,
+        'brightness': .56
+    },
+    'grappled': {
+        'hue': 47,
+        'saturate': 1,
+        'brightness': .49
+    },
+    'incapacitated': {
+        'hue': 190,
+        'saturate': 1,
+        'brightness': .68
+    },
+    'paraly': {
+        'hue': 287,
+        'saturate': .59,
+        'brightness': .46
+    },
+    'petrified': {
+        'hue': 30,
+        'saturate': 1,
+        'brightness': .46
+    },
+    'poison': {
+        'hue': 89,
+        'saturate': .95,
+        'brightness': .31
+    },
+    'prone': {
+        'hue': 281,
+        'saturate': .89,
+        'brightness': .63
+    },
+    'restrain': {
+        'hue': 5,
+        'saturate': .74,
+        'brightness': .45
+    },
+    'stun': {
+        'hue': 274,
+        'saturate': .78,
+        'brightness': .56
+    },
+    'unconscious': {
+        'hue': 207,
+        'saturate': .73,
+        'brightness': .68
     }
 };
 let defaultMatrix = {

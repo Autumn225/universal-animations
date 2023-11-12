@@ -61,11 +61,13 @@ async function attack(data) {
             glowDataMelee = {
                 'distance': 25,
                 'outerStrength': 10,
+                'innerStrength': 1,
                 'color': defaultPreferences.glows[glowColor] ?? '0xffffff'
             }
             glowDataRanged = {
                 'distance': 15,
                 'outerStrength': 5,
+                'innerStrength': 1,
                 'color': defaultPreferences.glows[glowColor] ?? '0xffffff'
             }
         }
@@ -141,8 +143,8 @@ async function postHit(data) {
                         .playbackRate(1)
                     .play();
             }
-            if (needsColor(data)) {
-                let color = getColor(data);s
+            if (needsColor(data) || data?.conditions?.size > 0) {
+                let color = getColor(data);
                 let file = Sequencer.Database.getEntry('jb2a.eldritch_blast.purple').file['05ft'];
                 await new Sequence()
                     .effect()
@@ -209,7 +211,7 @@ async function damage(data) {
                     .scaleToObject(1.5)
                     .belowTokens()
                     .playbackRate(1)
-                .play;
+                .play();
             if (needsColor(data)) {
                 let color = getColor(data);
                 new Sequence()
@@ -320,7 +322,7 @@ async function save(data) {
     }
 }
 function getColor(data) {
-    return data?.ammo?.damageFlavors?.[1] ?? data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? 'mgc';
+    return data?.ammo?.damageFlavors?.[1] ?? data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? data?.conditions?.first() ?? 'mgc';
 }
 function needsColor(data) {
     return data?.damageFlavors?.length > 1 || data?.ammo?.damageFlavors?.length > 0 || data?.otherDamageFlavors || data?.properties?.mgc === true || data?.ammo?.properties?.mgc === true;

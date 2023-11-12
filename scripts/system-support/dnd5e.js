@@ -40,7 +40,7 @@ export function systemHooks() {
         Hooks.on("dnd5e.preDisplayCard", async (item, options) => {
             let data = await getRequiredData({item, actor: item.actor, workflow: item})
             attack(data);
-            if (item.system.hasSave === true) { // Need to add save from ammo
+            if (item.system.hasSave === true) { // Save from ammo doesn't work without midi.
                 async function callback (actor, roll, abilityId) {
                     let itemUuid = await uaHandler.closeByActor(actor);
                     if (!itemUuid) return false;
@@ -117,16 +117,6 @@ export function systemHooks() {
     function getInfo(data) { // Gets properties that are used within animations
         data.isRitual = data.item.system?.components?.ritual;
         data.properties = data.item.system?.properties;
-        let conditions = new Set();
-        data.item?.effects.forEach(e => {
-            Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
-                if ([e?.label?.toLowerCase(), e?.name?.toLowerCase()].includes(c)) conditions.add(c)
-            });
-            e.changes.filter(ch => ['StatusEffect', 'StatusEffectLabel', 'macro.CE'].includes(ch.key)).forEach(ch =>  Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
-                if (ch.value.toLowerCase().includes(c)) conditions.add(c);
-            }));
-        });
-        data.conditions = conditions;
         if (data.item.system.baseItem) data.baseItem = data.item.system.baseItem;
         if (data.item.system.properties.fir) {
             if (data.item.system.damage.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
@@ -136,6 +126,18 @@ export function systemHooks() {
         if (data.item.system.rarity) data.itemRarity = data.item.system.rarity;
         data.hasAmmunition = data.item.system?.properties?.amm;
         if (data.hasAmmunition && data.item.system?.consume?.target) getAmmoInfo(data);
+        let conditions = new Set();
+        function getConditions(e) {
+            Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
+                if ([e?.label?.toLowerCase(), e?.name?.toLowerCase()].includes(c)) conditions.add(c)
+            });
+            e.changes.filter(ch => ['StatusEffect', 'StatusEffectLabel', 'macro.CE'].includes(ch.key)).forEach(ch =>  Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
+                if (ch.value.toLowerCase().includes(c)) conditions.add(c);
+            }));
+        }
+        data.item?.effects.forEach(e => getConditions(e));
+        data?.ammo?.item?.effects.forEach(e => getConditions(e));
+        data.conditions = conditions;
         if (data.item.hasDamage) {
             let damageFlavors = [];
             for (let i = 0; data.item.system.damage.parts.length > i; i++) {
@@ -167,6 +169,7 @@ export function systemHooks() {
         if (!ammoItem) return;
         data.ammo = {
             'name': ammoItem.name,
+            'item': ammoItem,
             'attackBonus': ammoItem.system.attackBonus,
             'properties': ammoItem.system.properties,
             'rarity': ammoItem.system.rarity,

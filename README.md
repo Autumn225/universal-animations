@@ -32,7 +32,6 @@
 ![produce-flame-melee-crit](docs/images/example2.gif)
   
 ### UPCOMING FEATURES:
-- Weapon save animations from ammo, save success animations based on condition.
 - Option to hide UA button on items.
 - Options to disable parts of UA animations.
 - Settings menu to change colors and animations used for each animation.
