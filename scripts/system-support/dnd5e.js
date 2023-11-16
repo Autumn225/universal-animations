@@ -117,13 +117,13 @@ export function systemHooks() {
     function getInfo(data) { // Gets properties that are used within animations
         data.isRitual = data.item.system?.components?.ritual;
         data.properties = data.item.system?.properties;
-        if (data.item.system.baseItem) data.baseItem = data.item.system.baseItem;
-        if (data.item.system.properties.fir) {
-            if (data.item.system.damage.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
-            else if (data.item.system.damage.parts[0][0].charAt(0) == 2) data.baseItem = 'firearmModern';
-            else if (['necrotic', 'radiant'].includes(data.item.system.damage.parts[0][1])) data.baseItem = 'firearmFuturistic';
+        if (data.item.system?.baseItem) data.baseItem = data.item.system.baseItem;
+        if (data.item.system?.properties?.fir) {
+            if (data.item.system?.damage?.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
+            else if (data.item.system?.damage?.parts[0][0].charAt(0) == 2) data.baseItem = 'firearmModern';
+            else if (['necrotic', 'radiant'].includes(data.item.system?.damage?.parts[0][1])) data.baseItem = 'firearmFuturistic';
         }
-        if (data.item.system.rarity) data.itemRarity = data.item.system.rarity;
+        if (data.item.system?.rarity) data.itemRarity = data.item.system.rarity;
         data.hasAmmunition = data.item.system?.properties?.amm;
         if (data.hasAmmunition && data.item.system?.consume?.target) getAmmoInfo(data);
         let conditions = new Set();
