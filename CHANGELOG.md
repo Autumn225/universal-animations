@@ -1,3 +1,6 @@
+## Release 0.1.2
+- Fixed bug causing errors on non-weapons.
+  
 ## Release 0.1.1
 - Added coloring for weapon hits based on conditions.
 - Condition animations will now play from ammo as well.
