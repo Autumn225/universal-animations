@@ -1,3 +1,6 @@
+## Release 0.1.3
+- Fixed (another) bug causing errors on non-weapons.
+  
 ## Release 0.1.2
 - Fixed bug causing errors on non-weapons.
   

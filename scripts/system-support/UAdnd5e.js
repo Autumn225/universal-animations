@@ -150,7 +150,7 @@ export function systemHooks() {
                 data.otherDamageHalfDamage = data.item.system.flags?.midiProperties?.halfdam ?? false
             }
         }
-        data.willGlow ??= data?.damageFlavors?.length > 1 ? true : data?.otherDamageFlavors ? true : Object.entries(data.item.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : data.item.system?.rarity ? true : false;
+        if (data.itemType === 'weapon') data.willGlow ??= data?.damageFlavors?.length > 1 ? true : data?.otherDamageFlavors ? true : Object.entries(data.item.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : data.item.system?.rarity ? true : false;
     }
     async function getOutcome(data) {
         data.hitTargetsIds = [];

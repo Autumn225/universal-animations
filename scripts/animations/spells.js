@@ -64,7 +64,7 @@ async function cast(data) {
     async function save(data) {
         await new Promise (async resolve => {
             setTimeout(resolve, 1250);
-            let color = data?.damageFlavors[0] ?? data.spellSchool;
+            let color = data?.damageFlavors?.[0] ?? data.spellSchool;
             for (let i of data.targets) {
                 new Sequence()
                     .effect()

@@ -1,1 +1,1 @@
-export * as dnd5e from "./dnd5e.js"
+export * as dnd5e from "./UAdnd5e.js"
