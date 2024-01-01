@@ -129,7 +129,7 @@ export function systemHooks() {
         let conditions = new Set();
         function getConditions(e) {
             Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
-                if ([e?.label?.toLowerCase(), e?.name?.toLowerCase()].includes(c)) conditions.add(c)
+                if ([e?.name ? e.name.toLowerCase() : e?.label.toLowerCase()].includes(c)) conditions.add(c)
             });
             e.changes.filter(ch => ['StatusEffect', 'StatusEffectLabel', 'macro.CE'].includes(ch.key)).forEach(ch =>  Object.keys(defaultPreferences.conditionAbrevs).forEach(c => {
                 if (ch.value.toLowerCase().includes(c)) conditions.add(c);
@@ -142,7 +142,7 @@ export function systemHooks() {
             let damageFlavors = [];
             for (let i = 0; data.item.system.damage.parts.length > i; i++) {
                 let flavor = data.item.system.damage.parts[i][1];
-                if (damageFlavors.includes(flavor.toLowerCase()) === false && !constants.nonDamageTypes.includes(flavor.toLowerCase())) damageFlavors.push(flavor);
+                if (damageFlavors.includes(flavor?.toLowerCase()) === false && !constants.nonDamageTypes.includes(flavor?.toLowerCase())) damageFlavors.push(flavor);
             }
             data.damageFlavors = damageFlavors;
             if (data.item.system?.formula) {

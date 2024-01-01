@@ -1,3 +1,7 @@
+## Release 0.1.4
+- Fixed efect finding to not cause deprecation warning.
+- Fixed error thrown on attacks workflows without a damage type.
+  
 ## Release 0.1.3
 - Fixed (another) bug causing errors on non-weapons.
   
