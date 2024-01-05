@@ -57,7 +57,7 @@ async function cast(data) {
     if (data.actionType === 'save') {
         await save(data);
         return;
-    } else if (['other', 'util'].includes(data.actionType) && data.targets.length > 0) {
+    } else if (['other', 'util'].includes(data.actionType) && data?.targets?.length > 0) {
         utility(data);
         return;
     }
@@ -105,7 +105,7 @@ async function cast(data) {
                     .belowTokens()
                 .play();
         }
-        if (data.conditions.size > 0) { // For conditions
+        if (data?.conditions?.size > 0) { // For conditions
             for (let condition of data.conditions) {
                 for (let i of data.targets) {
                     if (defaultPreferences.conditionAbrevs[condition].fade === true) {

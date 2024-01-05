@@ -1,5 +1,7 @@
 import * as systemSupport from './system-support/index.js'
 import { createHeaderButton } from './lib/itemConfig.js';
+import { uaHandler } from './handlers/ua-handler.js';
+import { animationHandler } from './handlers/animationHandler.js';
 // import game settings
 
 Hooks.once('init', async function() {
@@ -15,4 +17,6 @@ Hooks.once('ready', async function() {
     Hooks.on('getItemSheetHeaderButtons', createHeaderButton);
     const systemId = game.system.id;
     systemSupport[systemId].systemHooks();
+    uaHandler.startup();
+    animationHandler.initalizeSettings();
 });

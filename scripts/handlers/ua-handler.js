@@ -3,18 +3,35 @@ import { debug } from "../lib/debugger.js";
 
 let cache = {itemUuid: '', targetsIds: []}
 
+let autorecSettings = [];
+
 export let uaHandler = {
+    'startup': startup,
     'initialize': initialize,
     'initializeCache': initializeCache,
     'close': close,
     'closeByActor': closeByActor,
     'clean': clean,
 }
+function startup() {
+    if (game.modules.get('autoanimations')?.active) {
+        debug('UA Startup - Copying AA Settings');
+        autorecSettings = [
+            game.settings.get('autoanimations', 'aaAutorec-melee'),
+            game.settings.get('autoanimations', 'aaAutorec-range'),
+            game.settings.get('autoanimations', 'aaAutorec-ontoken'),
+            game.settings.get('autoanimations', 'aaAutorec-templatefx'),
+            game.settings.get('autoanimations', 'aaAutorec-aura'),
+            game.settings.get('autoanimations', 'aaAutorec-preset'),
+            game.settings.get('autoanimations', 'aaAutorec-aefx')
+        ]
+    }
+}
 async function initialize(data, stage) {
     let clonedData = foundry.utils.deepClone(data)
     if (await animationCheck(clonedData.item)) return;
     await getDistance(clonedData);
-    await animationHandler(clonedData, stage);
+    await animationHandler.animate(clonedData, stage);
     debug('Initialized Animation during stage: ' + stage, clonedData);
 }
 async function initializeCache(data, hookName, callback) {
@@ -66,15 +83,6 @@ async function animationCheck(item) {
     if (item.flags?.autoanimations?.isEnabled || item.flags['chris-Premades']?.info?.hasAnimation) return true;
     if (game.modules.get('autoanimations')?.active && item.flags?.autoanimations?.isEnabled != false) {
         let name = item.name;
-        let autorecSettings = [
-            game.settings.get('autoanimations', 'aaAutorec-melee'),
-            game.settings.get('autoanimations', 'aaAutorec-range'),
-            game.settings.get('autoanimations', 'aaAutorec-ontoken'),
-            game.settings.get('autoanimations', 'aaAutorec-templatefx'),
-            game.settings.get('autoanimations', 'aaAutorec-aura'),
-            game.settings.get('autoanimations', 'aaAutorec-preset'),
-            game.settings.get('autoanimations', 'aaAutorec-aefx')
-        ]
         return autorecSettings.some(setting => setting.some(autoRec => name.toLowerCase().includes(autoRec.label.toLowerCase())));
     } else return false;
 }
