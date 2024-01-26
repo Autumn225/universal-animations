@@ -1,9 +1,13 @@
+/*
+
+Deprecated by new settings and animation handler, will be deleted in future update.
+
 import { colorMatrix } from "./colorMatrix.js";
 import { constants } from '../lib/constants.js';
 import { defaultPreferences } from "../lib/defaultPreferences.js";
 
 async function attack(data) {
-    let animations = defaultPreferences?.baseWeapons[data.baseItem]?.animations;
+    let animations = defaultPreferences?.baseWeapons?.[data.baseItem];
     if (data?.ammo?.ammoType && constants.jb2aCheck === 'patreon') {
         if (data.ammo.damageFlavors) {
             animations = defaultPreferences[data.ammo.ammoType][data.ammo.damageFlavors[0]] ?? animations;
@@ -96,7 +100,7 @@ async function attack(data) {
 async function postHit(data) {
     for (let i of data.targets) {
         if (data.hitTargetsIds.includes(i.id)) {
-            if (data.baseItem === 'net') {
+            if (data.baseItem === 'net') { 
                 new Sequence()
                     .effect()
                         .file('jb2a.web.01')
@@ -332,4 +336,4 @@ export let weapons = {
     'postHit': postHit,
     'damage': damage,
     'save': save
-}
+}*/

@@ -1,3 +1,7 @@
+/*
+
+Deprecated by new settings and animation handler, will be deleted in future update.
+
 import { colorMatrix } from "./colorMatrix.js";
 import { constants } from '../lib/constants.js';
 import { defaultPreferences } from "../lib/defaultPreferences.js";
@@ -318,4 +322,4 @@ export let spells = {
     'attack': attack,
     'damage': damage,
     'save': save
-}
+} */

@@ -6,7 +6,6 @@ import { defaultPreferences } from "../lib/defaultPreferences.js";
 export function systemHooks() {
     if (game.modules.get("midi-qol")?.active) {
         Hooks.on('midi-qol.postPreambleComplete', async (workflow) => {
-            console.log('this is the preamble');
             await attack(getWorkflowData(workflow));
         })
         Hooks.on("midi-qol.AttackRollComplete", async (workflow) => {
@@ -72,7 +71,6 @@ export function systemHooks() {
         templateAnimation(await getRequiredData({itemUuid: template.flags?.dnd5e?.origin, templateData: template, workflow: template, isTemplate: true}))
     })
     async function attack(data) {
-        console.log('the attack has been done');
         data.actionType = data.item.system.actionType;
         data.itemType = data.item.type;
         getInfo(data);
@@ -111,7 +109,7 @@ export function systemHooks() {
         return {
             'id': game.time.serverTime,
             'item': workflow.item,
-            'token': workflow.token,
+            'token': workflow?.rangeDetails?.attackingToken ?? workflow.token,
             'targets': Array.from(workflow.targets),
             'workflow': workflow    
         }

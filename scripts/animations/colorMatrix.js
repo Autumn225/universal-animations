@@ -292,7 +292,7 @@ let defaultMatrix = {
     'saturate': 0,
     'hue': 0    
 }
-export function colorMatrix(animation, color) {
+export function colorMatrix(animation, color, overrides) {
     if (!Object.keys(animations).includes(animation)) return defaultMatrix;
     if (!Object.keys(colors).includes(color)) return defaultMatrix;
     let matrix = {
@@ -300,5 +300,6 @@ export function colorMatrix(animation, color) {
         'saturate': colors[color].saturate - animations[animation].saturate,
         'hue': colors[color].hue - animations[animation].hue
     }
+    if (overrides) matrix = foundry.utils.mergeObject(matrix, overrides);
     return matrix;
 }

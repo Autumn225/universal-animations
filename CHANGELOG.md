@@ -1,3 +1,9 @@
+## Release 0.2.0
+- Complete refactor of animation process. 
+  - Animations are systemactically played now, which paves the way for real settings and custom animations. 
+  - Everything should look the same, some timing may be different. Please let me know anything that looks off or different.
+- Compatibility with Midi's range checking/changing attacking token.
+  
 ## Release 0.1.4
 - Fixed effect finding to not cause deprecation warning.
 - Fixed error thrown on attacks workflows without a damage type.
