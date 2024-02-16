@@ -114,17 +114,33 @@ export function systemHooks() {
             'workflow': workflow    
         }
     }
+    function hasProperties(itemProperties, wantedProperties) {
+        if (isNewerVersion(game.system.version, '2.4.1')) {
+            return Array.from(itemProperties).some(k => wantedProperties.includes(k));
+        } else {
+            return Object.entries(data.item.system?.properties).some(([k, v]) => wantedProperties.includes(k) && v === true);
+        }
+    }
     function getInfo(data) { // Gets properties that are used within animations
-        data.isRitual = data.item.system?.components?.ritual;
-        data.properties = data.item.system?.properties;
-        if (data.item.system?.baseItem) data.baseItem = data.item.system.baseItem;
-        if (data.item.system?.properties?.fir) {
+        // 3.0.2 vs 2.4.1
+        if (isNewerVersion(game.system.version, '2.4.1')) {
+            data.isRitual = data.item.system?.properties.has('ritual') ? true : false;
+            if (data.item.system?.type?.baseItem) data.baseItem = data.item.system.type.baseItem;
+            if (data.item.system?.properties?.has('fir')) firearm(data)
+            data.hasAmmunition = data.item.system?.properties.has('amm');
+        } else {
+            data.isRitual = data.item.system?.components?.ritual;
+            if (data.item.system?.baseItem) data.baseItem = data.item.system.baseItem;
+            if (data.item.system?.properties?.fir) firearm(data);
+            data.hasAmmunition = data.item.system?.properties?.amm;
+        }
+        function firearm(data) {
             if (data.item.system?.damage?.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
             else if (data.item.system?.damage?.parts[0][0].charAt(0) == 2) data.baseItem = 'firearmModern';
             else if (['necrotic', 'radiant'].includes(data.item.system?.damage?.parts[0][1])) data.baseItem = 'firearmFuturistic';
         }
+        data.properties = data.item.system?.properties;
         if (data.item.system?.rarity) data.itemRarity = data.item.system.rarity;
-        data.hasAmmunition = data.item.system?.properties?.amm;
         if (data.hasAmmunition && data.item.system?.consume?.target) getAmmoInfo(data);
         let conditions = new Set();
         function getConditions(e) {
@@ -150,7 +166,7 @@ export function systemHooks() {
                 data.otherDamageHalfDamage = data.item.system.flags?.midiProperties?.halfdam ?? false
             }
         }
-        if (data.itemType === 'weapon') data.willGlow ??= data?.damageFlavors?.length > 1 ? true : data?.otherDamageFlavors ? true : Object.entries(data.item.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : data.item.system?.rarity ? true : false;
+        if (data.itemType === 'weapon') data.willGlow ??= data?.damageFlavors?.length > 1 ? true : data?.otherDamageFlavors ? true : hasProperties(data.item.system?.properties, ['ada', 'mgc', 'sil']) ? true : data.item.system?.rarity ? true : false;
     }
     async function getOutcome(data) {
         data.hitTargetsIds = [];
@@ -204,7 +220,7 @@ export function systemHooks() {
             }
             data.ammo.damageFlavors = damageFlavors;
         }
-        data.willGlow ??= data.ammo?.damageFlavors?.length > 1 ? true : Object.entries(ammoItem.system?.properties).some(([k, v]) => ['ada', 'mgc', 'sil'].includes(k) && v === true) ? true : ammoItem.system?.rarity ? true : false;
+        data.willGlow ??= data.ammo?.damageFlavors?.length > 1 ? true : hasProperties(ammoItem.system?.properties, ['ada', 'mgc', 'sil']) ? true : ammoItem.system?.rarity ? true : false;
     }
     function templateAnimation(data) {
         // Currently does nothing, I've got to think about what to do with templates. Suggestions welcome.

@@ -2,10 +2,10 @@ import * as systemSupport from './system-support/index.js'
 import { createHeaderButton } from './lib/itemConfig.js';
 import { uaHandler } from './handlers/ua-handler.js';
 import { animationHandler } from './handlers/animationHandler.js';
-// import game settings
+import { settings } from './lib/settings.js';
 
 Hooks.once('init', async function() {
-    //resgisterSettings()
+    settings.initialize();
 });
 
 Hooks.once('ready', async function() {
@@ -20,3 +20,6 @@ Hooks.once('ready', async function() {
     uaHandler.startup();
     animationHandler.initalizeSettings();
 });
+globalThis['universalAnimations'] = {
+    animationHandler
+}

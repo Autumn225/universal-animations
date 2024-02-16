@@ -1,0 +1,147 @@
+<form class="categories flexcol" style="display: flex; flex-wrap:nowrap; height: 100%;">
+    <div class="ua-settings-header form-group" style="flex:0">
+        <h1><input type="text" name="name" value="{{animation.name}}"/></h1>
+        <p>Default Setting?: {{animation.isDefault}} | Customized?: {{animation.isCustomized}}</p>
+    </div>
+    <div class="ua-settings-body" style="flex-direction:column; flex:1; justify-content:flex-start; overflow-x: hidden; overflow-y: auto;">
+        <div class="ua-animations-settings form-group" style="display: flex; flex-wrap:nowrap; flex-direction:column">
+            <div class="ua-animations-settings-option" style="display: flex; flex-wrap:nowrap; flex-direction:row; width: 100%;">
+                <label>Call:</label>
+                {{#each animation.call.values}}
+                    <input type="radio" name="call" id="{{this}}" value="{{this}}" {{#if (eq this ../animation.call.value)}}checked{{/if}}>
+                    <label for="{{this}}">{{lookup ../animation.call.valuesLabels @index}}</label><br>
+                {{/each}}
+            </div>
+            <div class="ua-animations-settings-option" style="display: flex; flex-wrap:wrap; flex-direction:row">
+                <label>Action Type:</label>
+                {{#each animation.actionType.values}}
+                    <input type="checkbox" name="actionType" id="{{this}}" value="{{this}}" {{#if (eq this (lookup ../animation.actionType.value @index))}}checked{{/if}}>
+                    <label for="{{this}}">{{lookup ../animation.actionType.valuesLabels @index}}</label>
+                {{/each}}
+            </div>
+            <div class="ua-animations-settings-option" style="display: flex; flex-wrap:nowrap; flex-direction:row; width: 100%;">
+                <label>Item Type:</label>
+                {{#each animation.itemType.values}}
+                    <input type="radio" name="itemType" id="{{this}}" value="{{this}}" {{#if (eq this ../animation.itemType.value)}}checked{{/if}}>
+                    <label for="{{this}}">{{lookup ../animation.itemType.valuesLabels @index}}</label><br>
+                {{/each}}
+            </div>
+            <div class="ua-animations-settings-option form-group" style="display: flex; flex-wrap:nowrap; flex-direction:row">
+                <label>Requirements: </label>
+                {{#if animation.requirements.value}}
+                    {{#each animation.requirements.value}}
+                        <input type="text" name="requirements.{{@index}}.key" value="{{this.key}}">
+                        <input type="text" name="requirements.{{@index}}.value" value="{{this.value}}">
+                        <button type="button" name="{{@index}}" class="requirements-delete-button" data-action="delete-requirement"><i class="fa-solid fa-minus"></i></button>
+                    {{/each}}
+                {{else}} None
+                {{/if}}
+            </div>
+            <button type="button" class="requirements-add-button" data-action="add-requirement">
+                <label>Add a Requirement</label>
+            </button>
+            <div class="ua-animations-settings-option form-group" style="display: flex; flex-wrap:nowrap; flex-direction:row; width:100%">
+                <label>Target Type:</label>
+                <select name="targetType" id="targetType">
+                    {{#each animation.targetType.values}}
+                        <option value="{{this}}" {{#if (eq this ../animation.targetType.value)}}selected{{/if}}>{{lookup ../animation.targetType.valuesLabels @index}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class="ua-animations-settings-option" 
+                {{#if (eq animation.targetType.value animation.targetType.values.[2])}} style="display: flex; flex-wrap:nowrap; flex-direction:row; width: 100%;"
+                {{else}} style="display: none; overflow: hidden;"{{/if}}>
+                <label style="width: 100%">Loop Of:</label>
+                <input type="text" name="loopOf" value="{{animation.loopOf.value}}">
+            </div>
+            <div class="ua-animations-settings-option" style="display: flex; flex-wrap:nowrap; flex-direction:row; width: 100%;">
+                <label>Async:</label>
+                {{#each animation.async.values}}
+                    <input type="radio" name="async" id="{{this}}" value="{{this}}" {{#if (eq this ../animation.async.value)}}checked{{/if}}>
+                    <label for="{{this}}">{{lookup ../animation.async.valuesLabels @index}}</label><br>
+                {{/each}}
+            </div>
+            <div class="ua-animations-settings-option" style="display: flex; flex-wrap:nowrap; flex-direction:row; width: 100%;">
+                <label style="width: 100%">Timeout:</label>
+                <input type="text" name="timeout" value="{{animation.timeout.value}}">
+            </div>
+        </div>
+        <div class="ua-animations-effects">
+            {{#each animation.effects}}
+                <div class="accordion" data-setting-id="{{@key}}">
+                    <button type='button' class="accordion-button" name="{{@index}}">
+                        <i class="fa-solid fa-chevron-down"></i>
+                        <label>Effect</label>
+                    </button>
+                    <div class="accordion-content" {{#if (eq true (lookup ../animation.buttonCache @index))}} style="display: block; overflow: hidden;" {{else}} style="display: none; overflow: hidden;"{{/if}}>
+                        {{#each this}}
+                        <div class="form-group" style="display: flex; flex-wrap:nowrap; flex-direction:row">
+                            {{#if this.isRadio}}
+                                <label>{{this.label}}:</label>
+                                <input type="radio" name="effects.{{@../index}}.{{@key}}" id="true" value=true {{#if (eq this.value true)}}checked{{/if}}>
+                                <label for="true">True</label><br>
+                                <input type="radio" name="effects.{{@../index}}.{{@key}}" id="false" value=false {{#if (eq this.value false)}}checked{{/if}}>
+                                <label for="false">False</label>
+                            {{else if this.isSelect}}
+                                <label>{{this.label}}:</label>
+                                <select name="effects.{{@../index}}.{{@key}}" id="{{@key}}">
+                                    {{#each this.values}}
+                                        <option value="{{this}}" {{#if (eq this ../this.value)}}selected{{/if}}>{{lookup ../this.valuesLabels @index}}</option>
+                                    {{/each}}
+                                </select>
+                            {{else if this.isSelectThenText}}
+                                <label>{{this.label}}:</label>
+                                {{#each this.values}}
+                                    {{#if this}}
+                                        <select name="effects.{{@../../index}}.{{@../key}}" id="{{this}}">
+                                        {{#each this}}
+                                            <option value="{{this}}" {{#if (eq this (lookup ../../this.value @../index))}}selected{{/if}}>{{this}}</option>
+                                        {{/each}}
+                                        </select>
+                                    {{else}}
+                                        <input type='text' name="effects.{{@../../index}}.{{@../key}}" value="{{lookup ../../this.value @index}}"/>
+                                    {{/if}}
+                                {{/each}}
+                            {{else if this.isText}}
+                                <label>{{this.label}}:</label>
+                                <input type='text' name="effects.{{@../index}}.{{@key}}" value="{{this.value}}"/>
+                            {{else if this.isTextObject}}
+                                <label>{{this.label}}:</label>
+                                <input type='text' name="effects.{{@../index}}.{{@key}}" value="{{this.value}}"/>
+                            {{else if this.isTextMultiple}}
+                                <label>{{this.label}}:</label>
+                                {{#each this.value}}
+                                    <input type="text" name="effects.{{@../../index}}.{{@../key}}" value="{{this}}"/>
+                                {{/each}}
+                            {{else if this.isNumber}}
+                                <label>{{this.label}}:</label>
+                                <input type="number" name="effects.{{@../index}}.{{@key}}" value="{{this.value}}"/>
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        <div style="display: flex; flex-direction: row; align-items: center; justify-content: center">
+                            <label>Add additional property</label>
+                            <select name="addProperty.{{@index}}" id="addProperty">
+                                <option value="false" selected>    </option>
+                                {{#each this.availableProperties}}
+                                    <option value="{{this}}">{{this}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <button type="button" name="{{@index}}" data-action="delete-effect">
+                            <label>Delete effect</label>
+                        </button>
+                    </div> 
+                </div>
+            {{/each}}
+            <button type="button" data-action="add-effect">
+                <label>Add new effect</label>
+            </button>
+        </div>
+    </div>
+    <div class="ua-settings-footer" style="flex:0">
+        <button type="button" class="ua-settings-button-submit" data-action="confirm">
+            <label>Confirm</label>
+        </button>
+    </div>
+</form>

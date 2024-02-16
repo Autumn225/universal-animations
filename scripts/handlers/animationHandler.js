@@ -1,6 +1,5 @@
 import { constants } from '../lib/constants.js'
 import { debug } from '../lib/debugger.js'
-import { settings } from '../lib/settings.js'
 import { colorMatrix } from '../animations/colorMatrix.js'
 import { defaultPreferences } from '../lib/defaultPreferences.js'
 
@@ -8,8 +7,7 @@ let settingsRegistry = {}
 
 function initializeSettings() {
     debug('Initializing Settings!');
-    // will eventually import properly
-    settingsRegistry = settings.defaultSettings;
+    settingsRegistry = game.settings.get('universal-animations', 'Animations');
 }
 function isNumber(number) {
     return (typeof number === 'number' || number instanceof Number);
@@ -18,9 +16,16 @@ function isString(string) {
     return (typeof string === 'string' || string instanceof String);
 }
 function glow(data) {
+    function hasProperties(itemProperties, wantedProperties) {
+        if (isNewerVersion(game.system.version, '2.4.1')) {
+            return Array.from(itemProperties).find(k => wantedProperties.includes(k))?.shift();
+        } else {
+            return Object.entries(data.item.system?.properties).find(([k, v]) => wantedProperties.includes(k) && v === true)?.shift();
+        }
+    }
     if (data.willGlow && !data.skipGlow) {
-        let glowColor = data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? Object.entries(data.item.system?.properties).find(([k, v]) => ['ada', 'sil'].includes(k) && v === true)?.shift() ?? data.item.system?.rarity ?? 'mgc';
-        if (data?.ammo) glowColor = data?.ammo?.damageFlavors?.[1] ?? Object.entries(data?.ammo?.properties).find(([k, v]) => ['ada', 'sil'].includes(k) && v === true)?.shift() ?? data?.ammo?.rarity ?? 'mgc';
+        let glowColor = data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? hasProperties(data.item.system?.properties, ['ada', 'sil']) ?? data.item.system?.rarity ?? 'mgc';
+        if (data?.ammo) glowColor = data?.ammo?.damageFlavors?.[1] ?? hasProperties(data?.ammo?.properties, ['ada', 'sil']) ?? data?.ammo?.rarity ?? 'mgc';
         let range = data.distance > 5
         return {
             'distance': range ? 15 : 25,
@@ -50,7 +55,13 @@ function getColor(data) {
     return data?.ammo?.damageFlavors?.[1] ?? data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? data?.conditions?.first() ?? 'mgc';
 }
 function needsColor(data) {
-    return data?.damageFlavors?.length > 1 || data?.ammo?.damageFlavors?.length > 0 || data?.otherDamageFlavors || data?.properties?.mgc === true || data?.ammo?.properties?.mgc === true ? true : false;
+    return data?.damageFlavors?.length > 1 || data?.ammo?.damageFlavors?.length > 0 || data?.otherDamageFlavors || data?.properties?.mgc === true || data?.properties?.has('mgc') || data?.ammo?.properties?.mgc === true || data?.ammo?.properties?.has('mgc') ? true : false;
+}
+function hasPostLoop(object) {
+    if (!object) return false;
+    return Object?.values(object)?.some(obj => 
+        obj && typeof obj === 'object' && obj.value === 'postLoop'
+    )
 }
 function buildSequence(data, sequence, e, i) {
     let effect = sequence.effect();
@@ -63,44 +74,45 @@ function buildSequence(data, sequence, e, i) {
         let position = Math.floor(Math.random() * e.files.length) ?? 0;
         effect.file(e.files[position]);
     }
-    isString(e?.atLocation) ? effect.atLocation(eval(e?.atLocation)) : effect.atLocation(eval(e?.atLocation[0]), e?.atLocation[1])
-    if (e?.anchor && e?.anchor != '' && e?.anchor != {}) effect.anchor(e?.anchor);
+    effect.atLocation(eval(e.atLocation[0]), JSON.parse(e.atLocation?.[1] ?? '{}'));
+    if (e?.anchor) effect.anchor(JSON.parse(e.anchor));
     if (e?.async === true) effect.async();
     if (e?.belowTokens === true) effect.belowTokens();
-    if (e?.delay && e?.delay != 0 && e?.delay != '') effect.delay(eval(e?.delay));
-    if (e?.duration && e?.duration != 0 && e?.duration != '') effect.duration(eval(e?.duration));
-    if (e?.endTime && e?.endTime != 0 && e?.endTime != '') effect.endTime(eval(e?.endTime));
-    if (e?.endTimePerc && e?.endTimePerc != 0 && e?.endTimePerc != '') effect.endTimePerc(eval(e?.endTimePerc));
-    if (e?.fadeIn && e?.fadeIn != 0 && e?.fadeIn != '') isNumber(e?.fadeIn) ? effect.fadeIn(eval(e?.fadeIn)) : effect.fadeIn(eval(e.fadeIn[0]), e.fadeIn[1]);
-    if (e?.fadeOut && e?.fadeOut != 0 && e?.fadeOut != '') isNumber(e?.fadeOut) ? effect.fadeOut(eval(e?.fadeOut)) : effect.fadeOut(eval(e.fadeOut[0]), e.fadeOut[1]);
-    if (e?.filter && e?.filter != '' && e?.filter != []) {
-        if (e.filter[0] === 'ColorMatrix') effect.filter('ColorMatrix', colorMatrix(e.filter[1], eval(e.filter[2]), e?.filter[3] ?? undefined));
+    if (e?.delay) effect.delay(e.delay);
+    if (e?.duration) effect.duration(eval(e.duration));
+    if (e?.endTime) effect.endTime(e.endTime);
+    if (e?.endTimePerc) effect.endTimePerc(e.endTimePerc);
+    if (e?.fadeIn) effect.fadeIn(eval(e.fadeIn[0]), JSON.parse(e.fadeIn?.[1] ?? '{}'));
+    if (e?.fadeOut) effect.fadeOut(eval(e?.fadeOut[0]), JSON.parse(e.fadeOut?.[1] ?? '{}'));
+    if (e?.filter) {
+        if (e.filter[0] === 'ColorMatrix') effect.filter('ColorMatrix', colorMatrix(e.filter[1], eval(e.filter[2]), JSON.parse(e?.filter[3] ?? '{}')));
         else if (e.filter[0] === 'Glow') effect.filter('Glow', glow(data));
         else if (e.filter[0] === 'Blur') effect.filter('Blur', eval(e.filter[1]));
     }
-    if (e?.missed && e?.missed != '') effect.missed(eval(e.missed));
+    if (e?.missed) effect.missed(eval(e.missed));
     if (e?.mirrorX === true) effect.mirrorX();
     if (e?.mirrorY === true) effect.mirrorY();
-    if (e?.moveSpeed && e?.moveSpeed != '' && isNumber(Number(e?.opacity))) effect.moveSpeed(eval(e?.moveSpeed));
-    if (e?.moveTowards && e?.moveTowards != '') isString(e?.moveTowards) ? effect.moveTowards(eval(e?.moveTowards)) : effect.moveTowards(eval(e.moveTowards[0]), e.moveTowards[1]);
-    if (e?.opacity !== '' && isNumber(Number(e?.opacity)) && e?.opacity !== undefined) effect.opacity(eval(e?.opacity));
-    if (e?.rotateIn && e?.rotateIn != '') e?.rotateIn.length === 2 ? effect.rotateIn(e?.rotateIn[0], e?.rotateIn[1]) : effect.rotateIn(e?.rotateIn[0], e?.rotateIn[1]. e?.rotateIn[2]);
-    if (e?.rotateTowards && e?.rotateTowards != '') isString(e?.rotateTowards) ? effect.rotateTowards(eval(e?.rotateTowards)) : effect.rotateTowards(eval(e.rotateTowards[0]), e.rotateTowards[1]);
-    if (e?.scaleIn && e?.scaleIn != 0 && e?.scaleIn != '') effect.scaleIn(eval(e?.scaleIn));
-    if (e?.scaleOut && e?.scaleOut != 0 && e?.scaleOut != '') effect.scaleOut(eval(e?.scaleOut));
-    if (e?.scaleToObject && e?.scaleToObject != 0 && e?.scaleToObject != '') effect.scaleToObject(eval(e?.scaleToObject));
-    if (e?.startTime && e?.startTime != 0 && e?.startTime != '') effect.startTime(eval(e?.startTime));
-    if (e?.startTimePerc && e?.startTimePerc != 0 && e?.startTimePerc != '') effect.startTimePerc(eval(e?.startTimePerc));
-    if (e?.stretchTo && e?.stretchTo != 0 && e?.stretchTo != '') isString(e?.stretchTo) ? effect.stretchTo(eval(e?.stretchTo)) : effect.stretchTo(eval(e?.stretchTo[0]), e?.stretchTo[1]);
-    if (e?.timeRange && e?.timeRange != 0 && e?.timeRange != '') effect.timeRange(e.timeRange[0], e.timeRange[1]);
-    if (e?.playbackRate && e?.playbackRate != 0 && e?.playbackRate != '') effect.playbackRate(eval(e?.playbackRate));
-    if (e?.waitUntilFinished === true || Number(e?.waitUntilFinished) > 0) effect.waitUntilFinished(e?.waitUntilFinished === true ? 0 : e?.waitUntilFinished);
-    if (e?.zIndex && e?.zIndex != '') effect.zIndex(eval(e?.zIndex));
+    if (e?.moveSpeed) effect.moveSpeed(e.moveSpeed);
+    if (e?.moveTowards) effect.moveTowards(eval(e?.moveTowards[0]), JSON.parse(e.moveTowards?.[1] ?? '{}'));
+    if (e?.opacity || e?.opacity === 0) effect.opacity(e.opacity);
+    if (e?.rotateIn) effect.rotateIn(e.rotateIn[0], e.rotateIn[1], JSON.parse(e.rotateIn?.[2] ?? '{}'));
+    if (e?.rotateOut) effect.rotateOut(e.rotateOut[0], e.rotateOut[1], JSON.parse(e.rotateOut?.[2] ?? '{}'));
+    if (e?.rotateTowards) effect.rotateTowards(eval(e.rotateTowards[0]), JSON.parse(e.rotateTowards?.[1] ?? '{}'));
+    if (e?.scaleIn) effect.scaleIn(e.scaleIn[0], e.scaleIn[1], JSON.parse(e.scaleIn?.[2] ?? '{}'));
+    if (e?.scaleOut) effect.scaleOut(e.scaleOut[0], e.scaleOut[1], JSON.parse(e.scaleOut?.[2] ?? '{}'));
+    if (e?.scaleToObject) effect.scaleToObject(e.scaleToObject);
+    if (e?.startTime) effect.startTime(e.startTime);
+    if (e?.startTimePerc) effect.startTimePerc(e.startTimePerc);
+    if (e?.stretchTo) effect.stretchTo(eval(e.stretchTo[0]), JSON.parse(e.stretchTo?.[1] ?? '{}'));
+    if (e?.timeRange) effect.timeRange(e.timeRange[0], e.timeRange[1]);
+    if (e?.playbackRate) effect.playbackRate(eval(e.playbackRate));
+    if (e?.waitUntilFinished) effect.waitUntilFinished(eval(e.waitUntilFinished = true ? 1 : e.waitUntilFinished));
+    if (e?.zIndex) effect.zIndex(e.zIndex);
     return sequence;
 }
 async function animate(data, state) {
     debug('Animation Handler: type ' + state + ' for ' + data.targets[0]);
-    let settingsClone = foundry.utils.deepClone(settingsRegistry);
+    let settingsClone = foundry.utils.deepClone(Object.values(settingsRegistry));
     settingsClone = settingsClone.filter(e => e.call === state && e.itemType === data.itemType && e.actionType?.includes(data.actionType));
     if (settingsClone.length === 0) {
         debug('Animation Handler: No animation found');
@@ -109,8 +121,8 @@ async function animate(data, state) {
     let evaluatedSettings = new Set(settingsClone);
     for (let s of settingsClone) {
         if (s?.requirements) {
-            for (let [key, value] of Object.entries(s.requirements)) {
-                if (value != 'postLoop' && eval(key) != value) evaluatedSettings.delete(s);
+            for (let r of Object.values(s.requirements)) {
+                if (r.value != 'postLoop' && eval(r.key) != r.value) evaluatedSettings.delete(s);
             }
         }
     }
@@ -120,9 +132,9 @@ async function animate(data, state) {
             let sequence = [];
             targetLoop: for (let k = 0; k < data.targets.length; k++) {
                 let i = data.targets[k]
-                if (Object.values(a.requirements).includes('postLoop')) {
-                    for (let [key, value] of Object.entries(a.requirements)) {
-                        if (value === 'postLoop' && !eval(key)) continue targetLoop;
+                if (hasPostLoop(a.requirements)) {
+                    for (let r of Object.values(a.requirements)) {
+                        if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                     }
                 }
                 sequence[k] = new Sequence();
@@ -139,9 +151,9 @@ async function animate(data, state) {
             let sequence = [];
             targetLoop: for (let k = 0; k < data.targets.length; k++) {
                 let i = data.targets[k]
-                if (a.requirements && Object.values(a.requirements).includes('postLoop')) {
-                    for (let [key, value] of Object.entries(a.requirements)) {
-                        if (value === 'postLoop' && !eval(key)) continue targetLoop;
+                if (hasPostLoop(a.requirements)) {
+                    for (let r of Object.values(a.requirements)) {
+                        if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                     }
                 }
                 sequence[k] = new Sequence();
@@ -164,9 +176,9 @@ async function animate(data, state) {
                 let sequence = [];
                 targetLoop: for (let k = 0; k < data.targets.length; k++) {
                     let i = data.targets[k];
-                    if (a.requirements && Object.values(a.requirements)?.includes('postLoop')) {
-                        for (let [key, value] of Object.entries(a.requirements)) {
-                            if (value === 'postLoop' && !eval(key)) continue targetLoop;
+                    if (hasPostLoop(a.requirements)) {
+                        for (let r of Object.values(a.requirements)) {
+                            if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                         }
                     }
                     sequence[k] = new Sequence();
@@ -185,9 +197,9 @@ async function animate(data, state) {
             let sequence = [];
             variableLoop: for (let k = 0; k < eval(a.loopOf)?.size; k++) {
                 let l = Array.from(eval(a.loopOf))[k];
-                if (a.requirements && Object.values(a.requirements)?.includes('postLoop')) {
-                    for (let [key, value] of Object.entries(a.requirements)) {
-                        if (value === 'postLoop' && !eval(key)) continue variableLoop;
+                if (hasPostLoop(a.requirements)) {
+                    for (let r of Object.values(a.requirements)) {
+                        if (r.value === 'postLoop' && !eval(r.key)) continue variableLoop;
                     }
                 }
                 sequence[k] = new Sequence();
@@ -215,5 +227,6 @@ async function animate(data, state) {
 }
 export let animationHandler = {
     'initalizeSettings': initializeSettings,
+    'buildSequence': buildSequence,
     'animate': animate
 }

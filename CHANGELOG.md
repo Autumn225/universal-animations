@@ -1,3 +1,11 @@
+## Release 0.3.0
+- Compatibility for D&D System 3.0.x, backwards compatible with 2.4.1.
+- Beta version of settings for animations, it's functional but ugly.
+  - Settings are only saved when you press confirm or yes.
+  - Will also make settings menus for colorMatrix entries and color preferences (currently defaultPreferences.js).
+  - Will work on the CSS of the menus after that's made.
+  - Will then make documentation for how to customize settings. Animation properties are exactly as named in sequencer. Look at the current animations if you want to mess around with customizing.
+  
 ## Release 0.2.0
 - Complete refactor of animation process. 
   - Animations are systemactically played now, which paves the way for real settings and custom animations. 

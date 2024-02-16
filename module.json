@@ -25,7 +25,7 @@
             "manifest": "https://raw.githubusercontent.com/foundryvtt/dnd5e/master/system.json",
             "compatibility": {
                 "minimum": "2.1.5",
-                "verified": "2.3.1"
+                "verified": "3.0.2"
             }
         }],
         "requires": [{
@@ -33,7 +33,7 @@
             "type": "module",
             "manifest": "https://github.com/fantasycalendar/FoundryVTT-Sequencer/releases/latest/download/manifest.json",
             "compatibility": {
-            "verified": "3.0.6"
+            "verified": "3.1.4"
             }
         }]
     },
