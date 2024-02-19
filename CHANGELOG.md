@@ -1,3 +1,6 @@
+## Release 0.3.1
+- Added try block around comparing item name to AA autorec settings, should stop a weird error that I've not managed to reproduce myself.
+  
 ## Release 0.3.0
 - Compatibility for D&D System 3.0.x, backwards compatible with 2.4.1.
 - Beta version of settings for animations, it's functional but ugly.

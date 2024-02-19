@@ -82,8 +82,14 @@ async function animationCheck(item) {
     if (item.flags?.universalAnimations?.override === 'neverPlay') return true;
     if (item.flags?.autoanimations?.isEnabled || item.flags['chris-Premades']?.info?.hasAnimation) return true;
     if (game.modules.get('autoanimations')?.active && item.flags?.autoanimations?.isEnabled != false) {
-        let name = item.name;
-        return autorecSettings.some(setting => setting.some(autoRec => name.toLowerCase().includes(autoRec.label.toLowerCase())));
+        try {
+            let name = item.name;
+            return autorecSettings.some(setting => setting.some(autoRec => name.toLowerCase().includes(autoRec.label.toLowerCase())));
+        } catch (error) {
+            let style = 'background-color: #ff3333; color: #ff6666;'
+            console.log(`%cERROR | Univeral Animations | Issue with AA Auto Recs - Please Share w/Autumn225`, style, error);
+            ui.notifications.error('ERROR | Universal Animations | Issue with AA Auto Recs | See Console (F12)');
+        }
     } else return false;
 }
 async function getDistance(data) {
