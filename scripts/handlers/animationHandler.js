@@ -17,7 +17,7 @@ function isString(string) {
 }
 function glow(data) {
     function hasProperties(itemProperties, wantedProperties) {
-        if (isNewerVersion(game.system.version, '2.4.1')) {
+        if (foundry.utils.isNewerVersion(game.system.version, '2.4.1')) {
             return Array.from(itemProperties).find(k => wantedProperties.includes(k))?.shift();
         } else {
             return Object.entries(data.item.system?.properties).find(([k, v]) => wantedProperties.includes(k) && v === true)?.shift();

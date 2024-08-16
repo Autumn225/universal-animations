@@ -30,7 +30,7 @@ function startup() {
 async function initialize(data, stage) {
     let clonedData = foundry.utils.deepClone(data)
     if (await animationCheck(clonedData.item)) return;
-    await getDistance(clonedData);
+    getDistance(clonedData);
     await animationHandler.animate(clonedData, stage);
     debug('Initialized Animation during stage: ' + stage, clonedData);
 }
@@ -92,30 +92,53 @@ async function animationCheck(item) {
         }
     } else return false;
 }
-async function getDistance(data) {
+function getDistance(data) {
     // This code was written by TPosney for Midi-QOL. It is adapated here for UA
     const t1 = data.token;
-    const target = data.targets[0];
-    const noResult = { distance: -1, acBonus: undefined };
-    if (!canvas || !canvas.scene)
-        return noResult;
-    if (!canvas.grid || !canvas.dimensions)
-        noResult;
-    if (!t1 || !target)
-        return noResult;
-    if (!canvas || !canvas.grid || !canvas.dimensions)
-        return noResult;
-    const t1StartX = t1.document.width >= 1 ? 0.5 : t1.document.width / 2;
-    const t1StartY = t1.document.height >= 1 ? 0.5 : t1.document.height / 2;
-    const t2StartX = target.document.width >= 1 ? 0.5 : target.document.width / 2;
-    const t2StartY = target.document.height >= 1 ? 0.5 : target.document.height / 2;
+    const t2 = data.targets[0];
+    if (!canvas || !canvas.scene) {
+        debug('No scene active');
+        return -1;
+    }
+    if (!canvas.grid || !canvas.dimensions) {
+        debug('Scene dimensions or grid not defined');
+        return -1;
+    }
+    if (!t1 || !t2) {
+        debug('Token or target not defined');
+        return -1;
+    }
+    let t1DocWidth = t1.document.width ?? 1;
+    if (t1DocWidth > 10) t1DocWidth = t1DocWidth / canvas.dimensions.size;
+    let t1DocHeight = t1.document.height ?? 1;
+    if (t1DocHeight > 10) t1DocHeight = t1DocHeight / canvas.dimensions.size;
+    let t2DocWidth = t2.document.width ?? 1;
+    if (t2DocWidth > 10) t2DocWidth = t2DocWidth / canvas.dimensions.size;
+    let t2DocHeight = t2.document.height ?? 1;
+    if (t2DocHeight > 10) t2DocHeight = t2DocHeight / canvas.dimensions.size;
+    const t1StartX = t1DocWidth >= 1 ? 0.5 : t1DocWidth / 2;
+    const t1StartY = t1DocHeight >= 1 ? 0.5 : t1DocHeight / 2;
+    const t2StartX = t2DocWidth >= 1 ? 0.5 : t2DocWidth / 2;
+    const t2StartY = t2DocHeight >= 1 ? 0.5 : t2DocHeight / 2;
     var x, x1, y, y1, d, r, segments = [], rdistance, distance;
-    for (x = t1StartX; x < t1.document.width; x++) {
-        for (y = t1StartY; y < t1.document.height; y++) {
-            const origin = new PIXI.Point(...canvas.grid.getCenter(Math.round(t1.document.x + (canvas.dimensions.size * x)), Math.round(t1.document.y + (canvas.dimensions.size * y))));
-            for (x1 = t2StartX; x1 < target.document.width; x1++) {
-                for (y1 = t2StartY; y1 < target.document.height; y1++) {
-                    const dest = new PIXI.Point(...canvas.grid.getCenter(Math.round(target.document.x + (canvas.dimensions.size * x1)), Math.round(target.document.y + (canvas.dimensions.size * y1))));
+    for (x = t1StartX; x < t1DocWidth; x++) {
+        for (y = t1StartY; y < t1DocHeight; y++) {
+            let origin;
+            if (game.release.generation > 11) {
+                const point = canvas.grid.getCenterPoint({ x: Math.round(t1.document.x + (canvas.dimensions.size * x)), y: Math.round(t1.document.y + (canvas.dimensions.size * y)) });
+                origin = new PIXI.Point(point.x, point.y);
+            } else {
+                origin = new PIXI.Point(...canvas.grid.getCenter(Math.round(t1.document.x + (canvas.dimensions.size * x)), Math.round(t1.document.y + (canvas.dimensions.size * y))));
+            }
+            for (x1 = t2StartX; x1 < t2DocWidth; x1++) {
+                for (y1 = t2StartY; y1 < t2DocHeight; y1++) {
+                    let dest;
+                    if (game.release.generation > 11) {
+                        const point = canvas.grid.getCenterPoint({ x: Math.round(t2.document.x + (canvas.dimensions.size * x1)), y: Math.round(t2.document.y + (canvas.dimensions.size * y1)) });
+                        dest = new PIXI.Point(point.x, point.y);
+                    } else {
+                        dest = new PIXI.Point(...canvas.grid.getCenter(Math.round(t2.document.x + (canvas.dimensions.size * x1)), Math.round(t2.document.y + (canvas.dimensions.size * y1))));
+                    }
                     const r = new Ray(origin, dest);
                     segments.push({ ray: r });
                 }
@@ -123,13 +146,73 @@ async function getDistance(data) {
         }
     }
     if (segments.length === 0) {
-        return noResult;
+        debug('Error with distance check, no paths to target found');
+        return -1;
     }
-    rdistance = segments.map(ray => canvas.grid.measureDistances([ray], { gridSpaces: true })[0]);
-    distance = rdistance[0];
-    rdistance.forEach(d => {
-        if (d < distance)
-            distance = d;
-    });
-    data.distance = distance;
+    rdistance = segments.map(ray => measureDistances([ray], { gridSpaces: true }));
+    distance = Math.min(...rdistance);
+    data.distance = distance
+}
+function measureDistances(segments, options) {
+    // Also stolen from Midi-QOL
+    if (game.release.generation > 11) {
+        let isGridless = canvas?.grid?.constructor.name === "GridlessGrid";
+        const oldMeasurePath = canvas?.grid?.constructor.prototype._measurePath;
+        const oldDiagonals = canvas?.grid?.diagonals;
+        const oldGetOffset = canvas?.grid?.constructor.prototype.getOffset;
+        let distances;
+        if (isGridless && options.gridSpaces && configSettings.griddedGridless && canvas?.grid) {
+            canvas.grid.constructor.prototype._measurePath = foundry.grid.SquareGrid.prototype._measurePath;
+            canvas.grid.constructor.prototype.getOffset = foundry.grid.SquareGrid.prototype.getOffset;
+            canvas.grid.diagonals = game.settings.get("core", "gridDiagonals");
+        } try {
+            distances = segments.map(s => canvas?.grid?.measurePath([s.ray.A, s.ray.B]))
+        } catch (err) {
+            throw (err);
+        } finally {
+            if (canvas?.grid) {
+                if (oldMeasurePath) canvas.grid.constructor.prototype._measurePath = oldMeasurePath;
+                if (oldDiagonals) canvas.grid.diagonals = oldDiagonals;
+                if (oldGetOffset) canvas.grid.constructor.prototype.getOffset = oldGetOffset
+            }
+        }
+        if (options.gridSpaces ) {
+            return distances.map(d => d.spaces === 0 ? d.distance : d.spaces * canvas?.grid.distance);
+        }
+        return distances = distances.map(d => d.distance);
+    } else {
+        let isGridless;
+        isGridless = canvas?.grid?.grid?.constructor.name === "BaseGrid";
+        if (!isGridless || !options.gridSpaces || !configSettings.griddedGridless) {
+            const distances = canvas?.grid?.measureDistances(segments, options);
+            if (!configSettings.gridlessFudge) return distances; // TODO consider other impacts of doing this
+            return distances;
+        }
+        const rule = game.settings.get("dnd5e", "diagonalMovement") ?? "EUCL"; // V12
+        if (!configSettings.gridlessFudge || !options.gridSpaces || !["555", "5105", "EUCL"].includes(rule)) {
+            return canvas?.grid?.measureDistances(segments, options);
+        }
+        let nDiagonal = 0;
+        const d = canvas?.dimensions;
+        const grid = canvas?.scene?.grid;
+        if (!d || !d.size) return 0;
+        const fudgeFactor = configSettings.gridlessFudge / d.distance;
+        return segments.map(s => {
+            let r = s.ray;
+            let nx = Math.ceil(Math.max(0, Math.abs(r.dx / d.size) - fudgeFactor));
+            let ny = Math.ceil(Math.max(0, Math.abs(r.dy / d.size) - fudgeFactor));
+            let nd = Math.min(nx, ny);
+            let ns = Math.abs(ny - nx);
+            nDiagonal += nd;
+            if (rule === "5105") {
+                let nd10 = Math.floor(nDiagonal / 2) - Math.floor((nDiagonal - nd) / 2);
+                let spaces = (nd10 * 2) + (nd - nd10) + ns;
+                return spaces * d.distance;
+            } else if (rule === "EUCL") {
+                let nx = Math.max(0, Math.abs(r.dx / d.size) - fudgeFactor);
+                let ny = Math.max(0, Math.abs(r.dy / d.size) - fudgeFactor);
+                return Math.ceil(Math.hypot(nx, ny) * grid?.distance);
+            } else return Math.max(nx, ny) * grid.distance;
+        })
+    }
 }

@@ -2,21 +2,26 @@ import { uaHandler } from "../handlers/ua-handler.js";
 import { getRequiredData } from "./getRequiredData.js";
 import { constants } from "../lib/constants.js";
 import { defaultPreferences } from "../lib/defaultPreferences.js";
+import { debug } from "../lib/debugger.js";
 
 export function systemHooks() {
     if (game.modules.get("midi-qol")?.active) {
         Hooks.on('midi-qol.postPreambleComplete', async (workflow) => {
+            debug('Hook caught for midi-qol.postPreambleComplete');
             await attack(getWorkflowData(workflow));
         })
         Hooks.on("midi-qol.AttackRollComplete", async (workflow) => {
+            debug('Hook caught for midi-qol.AttackRollComplete');
             if (workflow.item?.hasAreaTarget) return;
             await postHit(getWorkflowData(workflow));
         });
         Hooks.on("midi-qol.DamageRollComplete", async (workflow) => { 
+            debug('Hook caught for midi-qol.DamageRollComplete');
             if (workflow.item?.hasAreaTarget) return;
             await damage(getWorkflowData(workflow));
         });
         Hooks.on('midi-qol.postCheckSaves', async (workflow) => {
+            debug('Hook caught for post midi-qol.postCheckSaves')
             let data = getWorkflowData(workflow);
             for (let i of Array.from(workflow.saves)) {
                 let newData = data;
@@ -38,7 +43,7 @@ export function systemHooks() {
         });
     } else {
         Hooks.on("dnd5e.preDisplayCard", async (item, options) => {
-            let data = await getRequiredData({item, actor: item.actor, workflow: item})
+            let data = await getRequiredData({item, actor: item.actor, workflow: item});
             attack(data);
             if (item.system.hasSave === true) { // Save from ammo doesn't work without midi.
                 async function callback (actor, roll, abilityId) {
@@ -77,6 +82,7 @@ export function systemHooks() {
         if (data.itemType === 'spell') {
             data.spellSchool = data.item.system?.school;
         }
+        debug('End of attack function');
         await uaHandler.initialize(data, 'attack');
     }
     async function postHit(data) {
@@ -115,7 +121,7 @@ export function systemHooks() {
         }
     }
     function hasProperties(itemProperties, wantedProperties) {
-        if (isNewerVersion(game.system.version, '2.4.1')) {
+        if (foundry.utils.isNewerVersion(game.system.version, '2.4.1')) {
             return Array.from(itemProperties).some(k => wantedProperties.includes(k));
         } else {
             return Object.entries(data.item.system?.properties).some(([k, v]) => wantedProperties.includes(k) && v === true);
@@ -123,7 +129,7 @@ export function systemHooks() {
     }
     function getInfo(data) { // Gets properties that are used within animations
         // 3.0.2 vs 2.4.1
-        if (isNewerVersion(game.system.version, '2.4.1')) {
+        if (foundry.utils.isNewerVersion(game.system.version, '2.4.1')) {
             data.isRitual = data.item.system?.properties.has('ritual') ? true : false;
             if (data.item.system?.type?.baseItem) data.baseItem = data.item.system.type.baseItem;
             if (data.item.system?.properties?.has('fir')) firearm(data)
