@@ -44,7 +44,7 @@ async function initializeCache(data, hookName, callback) {
     let hookId = Hooks.on(hookName, callback);
     cache.hookData = {hookId: hookId, hookName: hookName, itemUuid: itemUuid};
     await new Promise(async (resolve) => {
-        setTimeout(resolve, 20000); //this delay with be customizable
+        setTimeout(resolve, 20000); //this delay should be customizable
     });
     debug('Timed out for item "' + itemUuid + '"')
     close(hookName, hookId, itemUuid);
@@ -155,6 +155,7 @@ function getDistance(data) {
 }
 function measureDistances(segments, options) {
     // Also stolen from Midi-QOL
+    let configSettings = game.settings.get('midi-qol', 'ConfigSettings');
     if (game.release.generation > 11) {
         let isGridless = canvas?.grid?.constructor.name === "GridlessGrid";
         const oldMeasurePath = canvas?.grid?.constructor.prototype._measurePath;

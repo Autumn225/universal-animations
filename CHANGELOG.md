@@ -1,7 +1,10 @@
+## Release 0.3.3
+- Fixed problem in handler for gridless midi-qol settings.
+  
 ## Release 0.3.2
 - Updated deprecated distance checking functions for v12, should now also support gridless in v11 and v12 (thanks to tposney).
 - Verified module for v12 and D&D 3.X+
-
+  
 ## Release 0.3.1
 - Added try block around comparing item name to AA autorec settings, should stop a weird error that I've not managed to reproduce myself.
   
