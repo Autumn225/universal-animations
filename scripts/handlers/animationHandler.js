@@ -68,7 +68,8 @@ function buildSequence(data, sequence, e, i) {
     if (e.fileUsage === 'single' && isString(e.files)) {
         effect.file(e.files);
     } else if (e.fileUsage === 'singleEval' && isString(e.files)) {
-        effect.file(eval(e.files));
+        if (e.files?.includes('spellSchool') && data.spellSchool.length === 0) effect.file('jb2a.swirling_sparkles.01.blue');
+        else effect.file(eval(e.files));
     } else if (e.fileUsage === 'random') {
         if (isString(e?.files)) e.files = findAnimations(data, e.files)
         let position = Math.floor(Math.random() * e.files.length) ?? 0;

@@ -1,3 +1,6 @@
+## Release 0.3.4
+- Fix for Midi-QOL overtimes (and any other spell-type item without a spell school)
+  
 ## Release 0.3.3
 - Fixed problem in handler for gridless midi-qol settings.
   
