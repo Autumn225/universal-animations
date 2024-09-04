@@ -80,7 +80,7 @@ async function clean() {
 async function animationCheck(item) {
     if (item.flags?.universalAnimations?.override === 'alwaysPlay') return false;
     if (item.flags?.universalAnimations?.override === 'neverPlay') return true;
-    if (item.flags?.autoanimations?.isEnabled || item.flags['chris-Premades']?.info?.hasAnimation) return true;
+    if (item.flags?.autoanimations?.isEnabled || item.flags['chris-premades']?.info?.hasAnimation) return true;
     if (game.modules.get('autoanimations')?.active && item.flags?.autoanimations?.isEnabled != false) {
         try {
             let name = item.name;

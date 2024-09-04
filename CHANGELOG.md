@@ -1,3 +1,6 @@
+## Release 0.3.5
+- Fixed typo for Chris's Premades compatability
+  
 ## Release 0.3.4
 - Fix for Midi-QOL overtimes (and any other spell-type item without a spell school)
   
