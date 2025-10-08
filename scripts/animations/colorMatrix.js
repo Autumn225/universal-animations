@@ -261,6 +261,7 @@ let colors = {
         'saturate': 1,
         'brightness': .46
     },
+    // eslint-disable-next-line no-dupe-keys
     'poison': {
         'hue': 89,
         'saturate': .95,
@@ -291,7 +292,7 @@ let defaultMatrix = {
     'brightness': 1,
     'saturate': 0,
     'hue': 0    
-}
+};
 export function colorMatrix(animation, color, overrides) {
     if (!Object.keys(animations).includes(animation)) return defaultMatrix;
     if (!Object.keys(colors).includes(color)) return defaultMatrix;
@@ -299,7 +300,7 @@ export function colorMatrix(animation, color, overrides) {
         'brightness': colors[color].brightness + 1,
         'saturate': colors[color].saturate - animations[animation].saturate,
         'hue': colors[color].hue - animations[animation].hue
-    }
+    };
     if (overrides) matrix = foundry.utils.mergeObject(matrix, overrides);
     return matrix;
 }

@@ -26,7 +26,7 @@
 - Animations for weapon attacks, melee and ranged, based on base item, damage flavor, and hit/miss/crit.
 - Weapon animation variations with JB2A patreon.
 - Animations for magic weapon attacks, with animations for saves and conditions.
-- Usable for D&D 5e system and Foundry versions 10 & 11.
+- Usable for D&D 5e system version 5.x and Foundry version 13.
 - Will recognize animations from other modules and not play, can be overridden per item as well.
   
 ![produce-flame-melee-crit](docs/images/example2.gif)
@@ -43,6 +43,10 @@
 - In-setting color picker.
 - Animations for class features and other feats.
 - Generic sounds?
+
+## SUPPORT ME
+If you enjoy the module and are in the position to, please consider supporting me on Ko-fi.
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U0EZHM7)
   
 ## **SPECIAL THANKS TO:**
 [OTIGON](https://www.patreon.com/otigon) - AUTOMATED ANIMATIONS\

@@ -1,0 +1,18 @@
+<div class="ua-header{{#if header.class}}{{ header.class}}{{/if}}" id="{{header.id}}">
+    {{#each header.buttons}}
+        <button type="{{this.type}}" class="header-button" data-action="{{this.action}}" name="{{this.name}}">
+            <label>{{localize this.label}}</label>
+        </button>
+    {{/each}}
+    {{#each header.inputs}}
+        {{#if (eq type 'text')}}
+            <h class="ua-header-input">
+                <input type="text" id="{{id}}" name="{{name}}" value="{{value}}"></input>
+            </h>
+        {{else if (eq type 'content')}}
+            <a class="ua-header-content" id="{{id}}" name="{{name}}">
+                <span {{#if class}}class="{{class}}"{{/if}}><i>{{value}}</i></span>
+            </a>
+        {{/if}}
+    {{/each}}
+</div>

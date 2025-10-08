@@ -10,13 +10,13 @@ export function createHeaderButton(config, buttons) {
     }
 }
 async function itemConfig(itemDocument) {
-    let currentConfig = itemDocument.flags?.universalAnimations?.override ?? 'default'
+    let currentConfig = itemDocument.flags?.universalAnimations?.override ?? 'default';
     let currentCheck = {
         'default': currentConfig === 'default' ? `checked` : ``,
         'neverPlay': currentConfig === 'neverPlay' ? `checked` : ``,
         'alwaysPlay': currentConfig === 'alwaysPlay' ? `checked` : ``,
-    }
-    new Promise(async (resolve) => {
+    };
+    new Promise(resolve => {
         new Dialog({
             title: 'Configure Override of Universal Animation',
             content: `
@@ -43,10 +43,10 @@ async function itemConfig(itemDocument) {
             },
             close: () => resolve(false)
         }).render(true);
-    })
+    });
     async function updateItem(itemDocument, html) {
-        let option = html.find('[name="override"]:checked').val()
-        let updates = {'flags.universalAnimations.override': option}
+        let option = html.find('[name="override"]:checked').val();
+        let updates = {'flags.universalAnimations.override': option};
         await itemDocument.update(updates);
     }
 }

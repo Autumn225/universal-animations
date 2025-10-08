@@ -1,3 +1,9 @@
+## Release 0.4.0
+- Updated for Foundry v13 & D&D System 5.x. No more backwards compatability.
+- Things should all be working but I've only done so much testing. Please report any bugs.
+- Settings and animation menus updated for app v2 and no longer look ugly, supports light and dark mode.
+- Settings format has been updated so settings have been completely reset. Won't happen in the future.
+  
 ## Release 0.3.5
 - Fixed typo for Chris's Premades compatability
   

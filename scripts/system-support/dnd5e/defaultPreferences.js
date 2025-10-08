@@ -572,7 +572,7 @@ const glows = {
     'ada': '0x66BB6A',
     'sil': '0xB0BEC5',
     'mgc': '0x886EFF'
-}
+};
 export let defaultPreferences = {
     'spellSchools': spellSchools,
     'conditionAbrevs': conditionsAbrevs,
@@ -583,4 +583,4 @@ export let defaultPreferences = {
     'bullet01': patreonBullets01,
     'bullet02': patreonBullets02,
     'glows': glows
-}
+};

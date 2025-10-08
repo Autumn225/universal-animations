@@ -1,0 +1,51 @@
+<div class="ua-settings scrollable">
+    {{#each form.inputs}}
+        <div class="ua-settings-item" id="{{@key}}">
+            <div class="ua-settings-title">
+                <h>{{name}}</h>
+                <div class="ua-settings-item-buttons">
+                    {{#each ../form/buttons}}
+                        <button type="{{type}}" class="ua-settings-item-button" data-action="{{action}}" name="{{name}}" id="{{name}}">
+                            <i class="{{icon}}"></i>
+                        </button>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="ua-settings-info">
+                <a>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.Call.Label"}}</span>
+                    <span class="seperator">|</span>
+                    <span class="value">{{call}}</span>
+                </a>
+                <a>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.ActionType.Label"}}</span>
+                    <span class="seperator">|</span>
+                    <span class="value">{{actionType}}</span>
+                </a>
+                <a>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.ItemType.Label"}}</span>
+                    <span class="seperator">|</span>
+                    <span class="value">{{itemType}}</span>
+                </a>
+                <a>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.TargetType.Label"}}</span>
+                    <span class="seperator">|</span>
+                    <span class="value">{{targetType}}</span>
+                </a>
+                <a>
+                    <span class="value">{{effects.length}}</span>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.Effects.Label"}}</span>
+                </a>
+                <a>
+                    <span class="value">{{requirementsSize}}</span>
+                    <span class="label">{{localize "UNIVERSALANIMATIONS.SettingsMenu.Requirements.Label"}}</span>
+                </a>
+            </div>
+        </div>
+    {{/each}}
+    <div class="ua-settings-add">
+        <button type="button" data-action="settingAdd" name="settingAdd" id="settingAdd">
+            <label for="settingAdd">{{localize "UNIVERSALANIMATIONS.SettingsMenu.Add.Label"}}</label>
+        </button>
+    </div>
+</div>

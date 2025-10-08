@@ -1,13 +1,16 @@
-import { constants } from '../lib/constants.js'
-import { debug } from '../lib/debugger.js'
-import { colorMatrix } from '../animations/colorMatrix.js'
-import { defaultPreferences } from '../lib/defaultPreferences.js'
+/* eslint-disable no-async-promise-executor */
+import { debug } from '../lib/debugger.js';
+import { colorMatrix } from '../animations/colorMatrix.js';
+import * as preferences from '../system-support/indexPreferences.js';
+import { settings } from '../lib/settings.js';
 
-let settingsRegistry = {}
+let defaultPreferences = {};
+let settingsRegistry = {};
 
 function initializeSettings() {
     debug('Initializing Settings!');
-    settingsRegistry = game.settings.get('universal-animations', 'Animations');
+    settingsRegistry = game.settings.get('universal-animations', 'animations');
+    defaultPreferences = preferences[game.system.id].defaultPreferences;
 }
 function isNumber(number) {
     return (typeof number === 'number' || number instanceof Number);
@@ -24,26 +27,24 @@ function glow(data) {
         }
     }
     if (data.willGlow && !data.skipGlow) {
-        let glowColor = data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? hasProperties(data.item.system?.properties, ['ada', 'sil']) ?? data.item.system?.rarity ?? 'mgc';
-        if (data?.ammo) glowColor = data?.ammo?.damageFlavors?.[1] ?? hasProperties(data?.ammo?.properties, ['ada', 'sil']) ?? data?.ammo?.rarity ?? 'mgc';
-        let range = data.distance > 5
+        let range = data.distance > 5;
         return {
-            'distance': range ? 15 : 25,
-            'outerStrength': range ? 5 : 10,
-            'innerStrength': 1,
-            'color': defaultPreferences.glows[glowColor] ?? '0xffffff'
-        }
+            distance: range ? 15 : 25,
+            outerStrength: range ? 5 : 10,
+            innerStrength: 1,
+            color: defaultPreferences.glows[data.glowColor] ?? '0xffffff'
+        };
     } else {
         return {
-            'distance': 1,
-            'outerStrength': 0
-        }
+            distance: 1,
+            outerStrength: 0
+        };
     }
 }
 function findAnimations(data, files) {
     let animations;
-    if (files === 'baseWeapons') animations = defaultPreferences?.baseWeapons?.[data.baseItem].animations
-    let jb2a = constants.jb2aCheck;
+    if (files === 'baseWeapons') animations = defaultPreferences?.baseWeapons?.[data.baseItem].animations;
+    let jb2a = jb2aCheck();
     if (jb2a === 'patreon') animations = animations['patreon'] ?? animations;
     if (Object?.keys(animations).includes('ranged')) {
         let range = data.distance > 5 ? 'ranged' : 'melee';
@@ -51,17 +52,20 @@ function findAnimations(data, files) {
     }
     return animations;
 }
-function getColor(data) {
-    return data?.ammo?.damageFlavors?.[1] ?? data?.damageFlavors?.[1] ?? data?.otherDamageFlavors?.[0] ?? data?.conditions?.first() ?? 'mgc';
+function jb2aCheck () {
+    return game.modules.get('jb2a_patreon')?.active ? 'patreon' : game.modules.get('JB2A_DnD5e')?.active ? 'free' : false;
+}
+function getColor(data) { // Available to evaluations within the animations
+    return data.color;
 }
 function needsColor(data) {
-    return data?.damageFlavors?.length > 1 || data?.ammo?.damageFlavors?.length > 0 || data?.otherDamageFlavors || data?.properties?.mgc === true || data?.properties?.has('mgc') || data?.ammo?.properties?.mgc === true || data?.ammo?.properties?.has('mgc') ? true : false;
+    return data.needsColor;
 }
 function hasPostLoop(object) {
     if (!object) return false;
-    return Object?.values(object)?.some(obj => 
+    return object.some(obj => 
         obj && typeof obj === 'object' && obj.value === 'postLoop'
-    )
+    );
 }
 function buildSequence(data, sequence, e, i) {
     let effect = sequence.effect();
@@ -71,7 +75,7 @@ function buildSequence(data, sequence, e, i) {
         if (e.files?.includes('spellSchool') && data.spellSchool.length === 0) effect.file('jb2a.swirling_sparkles.01.blue');
         else effect.file(eval(e.files));
     } else if (e.fileUsage === 'random') {
-        if (isString(e?.files)) e.files = findAnimations(data, e.files)
+        if (isString(e?.files)) e.files = findAnimations(data, e.files);
         let position = Math.floor(Math.random() * e.files.length) ?? 0;
         effect.file(e.files[position]);
     }
@@ -107,12 +111,12 @@ function buildSequence(data, sequence, e, i) {
     if (e?.stretchTo) effect.stretchTo(eval(e.stretchTo[0]), JSON.parse(e.stretchTo?.[1] ?? '{}'));
     if (e?.timeRange) effect.timeRange(e.timeRange[0], e.timeRange[1]);
     if (e?.playbackRate) effect.playbackRate(eval(e.playbackRate));
-    if (e?.waitUntilFinished) effect.waitUntilFinished(eval(e.waitUntilFinished = true ? 1 : e.waitUntilFinished));
+    if (e?.waitUntilFinished) effect.waitUntilFinished(eval(e.waitUntilFinished === true ? 1 : e.waitUntilFinished));
     if (e?.zIndex) effect.zIndex(e.zIndex);
     return sequence;
 }
 async function animate(data, state) {
-    debug('Animation Handler: type ' + state + ' for ' + data.targets[0]);
+    debug('Animation Handler: type ' + state + ' for ' + data.targets[0].name);
     let settingsClone = foundry.utils.deepClone(Object.values(settingsRegistry));
     settingsClone = settingsClone.filter(e => e.call === state && e.itemType === data.itemType && e.actionType?.includes(data.actionType));
     if (settingsClone.length === 0) {
@@ -122,7 +126,7 @@ async function animate(data, state) {
     let evaluatedSettings = new Set(settingsClone);
     for (let s of settingsClone) {
         if (s?.requirements) {
-            for (let r of Object.values(s.requirements)) {
+            for (let r of s.requirements) {
                 if (r.value != 'postLoop' && eval(r.key) != r.value) evaluatedSettings.delete(s);
             }
         }
@@ -132,9 +136,9 @@ async function animate(data, state) {
         if (a.targetType === 'multiple') {
             let sequence = [];
             targetLoop: for (let k = 0; k < data.targets.length; k++) {
-                let i = data.targets[k]
+                let i = data.targets[k];
                 if (hasPostLoop(a.requirements)) {
-                    for (let r of Object.values(a.requirements)) {
+                    for (let r of a.requirements) {
                         if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                     }
                 }
@@ -151,9 +155,9 @@ async function animate(data, state) {
         } else if (a.targetType === 'multipleLoopPromise') {
             let sequence = [];
             targetLoop: for (let k = 0; k < data.targets.length; k++) {
-                let i = data.targets[k]
+                let i = data.targets[k];
                 if (hasPostLoop(a.requirements)) {
-                    for (let r of Object.values(a.requirements)) {
+                    for (let r of a.requirements) {
                         if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                     }
                 }
@@ -169,7 +173,7 @@ async function animate(data, state) {
                         sequence[k].play();
                     }
                     a.timeout === 'resolve' ? resolve() : undefined;
-                })
+                });
             }
         } else if (a.targetType === 'multiplePromiseLoop') {
             await new Promise(async resolve => {
@@ -178,7 +182,7 @@ async function animate(data, state) {
                 targetLoop: for (let k = 0; k < data.targets.length; k++) {
                     let i = data.targets[k];
                     if (hasPostLoop(a.requirements)) {
-                        for (let r of Object.values(a.requirements)) {
+                        for (let r of a.requirements) {
                             if (r.value === 'postLoop' && !eval(r.key)) continue targetLoop;
                         }
                     }
@@ -193,13 +197,13 @@ async function animate(data, state) {
                     }
                 }
                 a.timeout === 'resolve' ? resolve() : undefined;
-            })
+            });
         } else if (a.targetType === 'loopOf') {
             let sequence = [];
-            variableLoop: for (let k = 0; k < eval(a.loopOf)?.size; k++) {
+            variableLoop: for (let k = 0; k < eval(a.loopOf)?.length; k++) {
                 let l = Array.from(eval(a.loopOf))[k];
                 if (hasPostLoop(a.requirements)) {
-                    for (let r of Object.values(a.requirements)) {
+                    for (let r of a.requirements) {
                         if (r.value === 'postLoop' && !eval(r.key)) continue variableLoop;
                     }
                 }
@@ -227,7 +231,7 @@ async function animate(data, state) {
     }
 }
 export let animationHandler = {
-    'initalizeSettings': initializeSettings,
-    'buildSequence': buildSequence,
-    'animate': animate
-}
+    initalizeSettings: initializeSettings,
+    buildSequence: buildSequence,
+    animate: animate
+};

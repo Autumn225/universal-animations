@@ -1,0 +1,7 @@
+<div class="ua-footer{{#if footer.class}}{{ footer.class}}{{/if}}" id="{{footer.id}}">
+    {{#each footer.buttons}}
+        <button type="{{this.type}}" class="footer-button" data-action="{{this.action}}" name="{{this.name}}">
+            <label>{{localize this.label}}</label>
+        </button>
+    {{/each}}
+</div>

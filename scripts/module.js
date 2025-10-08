@@ -1,18 +1,20 @@
-import * as systemSupport from './system-support/index.js'
-import { createHeaderButton } from './lib/itemConfig.js';
-import { uaHandler } from './handlers/ua-handler.js';
+import * as systemSupport from './system-support/index.js';
+import { createHeaderButton } from './applications/itemConfig.js';
+import { uaHandler } from './handlers/uaHandler.js';
 import { animationHandler } from './handlers/animationHandler.js';
 import { settings } from './lib/settings.js';
+import { helpers } from './lib/lib.js';
 
 Hooks.once('init', async function() {
     settings.initialize();
+    helpers.registerHandlebarsHelpers();
 });
 
 Hooks.once('ready', async function() {
     if (game.modules.get('jb2a_patreon')?.active && game.modules.get('JB2A_DnD5e')?.active) {
-        ui.notifications.warn('Universal Animations | You have both JB2A modules active, please disable the free version', {permanent: true})
+        helpers.notification('warn', 'UNIVERSALANIMATIONS.Notifications.BothJB2As', {permanent: true});
     } else if (!game.modules.get('jb2a_patreon')?.active && !game.modules.get('JB2A_DnD5e')?.active) {
-        ui.notifications.error('Universal Animations | You do not have a JB2A module active, this module requires either the free or patreon version', {permanent: true})
+        helpers.notification('error', 'UNIVERSALANIMATIONS.Notifications.NoJB2A', {permanent: true});
     }
     Hooks.on('getItemSheetHeaderButtons', createHeaderButton);
     const systemId = game.system.id;
@@ -22,4 +24,4 @@ Hooks.once('ready', async function() {
 });
 globalThis['universalAnimations'] = {
     animationHandler
-}
+};

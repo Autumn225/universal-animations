@@ -1,2 +1,5 @@
 
 universal-animations.lock
+node_modules/
+.vscode/
+eslint.config.mjs

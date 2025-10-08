@@ -1,0 +1,243 @@
+fieldset.ua-fieldset {
+    border-radius: 4px;
+    margin-top: 0.625em;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.theme-dark .ua-fieldset {
+    border-color: var(--color-light-5);
+}
+div.ua-row, a.ua-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.625em;
+    align-items: center;
+    justify-content: space-between;
+}
+.theme-dark div.ua-fade-line {
+    background: linear-gradient(to right, var(--color-light-5), transparent);
+}
+.theme-light div.ua-fade-line {
+    background: linear-gradient(to right, var(--color-dark-5), transparent);
+}
+div.ua-fade-line {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+}
+div.ua-accordion {
+    transition: max-height 0.5s linear;
+}
+div.ua-accordion-closed {
+    max-height: 0;
+    overflow: hidden;
+}
+div.ua-accordion-open {
+    max-height: 1000px;
+}
+.ua-accordion-button icon.fa-chevron-right {
+    transition: transform 0.5s linear;
+}
+.ua-accordion-button-open icon.fa-chevron-right {
+    transform: rotate(90deg);
+}
+.ua-wide {
+    width: 100%
+}
+div.ua-footer, div.ua-header {
+    display: flex;
+    flex-direction: row;
+    gap: 0.625em;
+    flex-wrap: wrap;
+    align-items: center;
+}
+div.ua-header h.ua-header-input {
+    flex: 1;
+    font-family: var(--font-h1);
+    font-size: var(--font-h1-size);
+    width: 100%;
+    input {
+        background: transparent;
+        color: var(--color-text-primary);
+        height: 100%;
+    }
+}
+.theme-dark div.ua-header a.ua-header-content {
+    border: 1px solid var(--color-cool-4);
+    background-color: var(--color-cool-4);
+    color: var(--color-light-3);
+}
+.theme-light div.ua-header a.ua-header-content {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+div.ua-header a.ua-header-content {
+    display: flex;
+    padding: 5px;
+    gap: 2px;
+    border-radius: 3px;
+    height: 50%;
+    span {
+        align-content: center;
+    }
+}
+.theme-dark div.ua-header:has(h.ua-header-input)::after {
+    background: linear-gradient(to right, var(--color-light-5), transparent);
+}
+.theme-light div.ua-header:has(h.ua-header-input)::after {
+    background: linear-gradient(to right, var(--color-dark-5), transparent);
+}
+div.ua-header:has(h.ua-header-input)::after {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+}
+div.ua-footer {
+    margin-top: auto;
+}
+div.ua-footer button.footer-button, div.ua-header button.header-button {
+    flex: 1;
+}
+div.ua-settings {
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+div.ua-settings .ua-settings-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+div.ua-settings .ua-settings-item .ua-settings-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    width: 100%;
+    button {
+        flex: 0
+    }
+    h {
+        width: 100%;
+        flex: 1;
+        font-family: var(--font-h1);
+        font-size: var(--font-h1-size);
+    }
+    h::after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 100%;
+    }
+}
+.theme-dark .ua-settings .ua-settings-item .ua-settings-title h::after {
+    background: linear-gradient(to right, var(--color-light-5), transparent);
+}
+.theme-light .ua-settings .ua-settings-item .ua-settings-title h::after {
+    background: linear-gradient(to right, var(--color-dark-5), transparent);
+}
+div.ua-settings .ua-settings-item .ua-settings-title .ua-settings-item-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 5px;
+}
+div.ua-settings .ua-settings-item .ua-settings-info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.625em;
+    padding: 0.625em;
+}
+.theme-dark div.ua-settings .ua-settings-item .ua-settings-info a {
+    border: 1px solid var(--color-cool-4);
+    background-color: var(--color-cool-4);
+    color: var(--color-light-3);
+}
+.theme-light div.ua-settings .ua-settings-item .ua-settings-info a {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+div.ua-settings .ua-settings-item .ua-settings-info a {
+    padding: 5px;
+    gap: 2px;
+    border-radius: 3px;
+}
+.theme-dark .ua-settings .ua-settings-item .ua-settings-info span.seperator {
+    color: var(--color-light-5);
+}
+.theme-light .ua-settings .ua-settings-item .ua-settings-info span.seperator {
+    color: var(--color-dark-5);
+}
+div.ua-settings .ua-settings-add {
+    width: 100%;
+    padding: 0.625em 0;
+    button {
+        width: 100%;
+    }
+}
+div.ua-animations .ua-animations-input {
+    width: 48%;
+    > label {
+        width: 50%;
+    }
+}
+div.ua-animations .ua-animations-input:has(multi-select) {
+    width: 100%;
+    order: -1;
+    > label {
+        width: 20%;
+    };
+}
+div.ua-animations .ua-animations-input:has(.ua-animations-requirements) {
+    width: 100%;
+    order: 100;
+}
+div.ua-animations .ua-animations-input .ua-animations-requirements {
+    width: 100%;
+}
+div.ua-animations .ua-animations-input .ua-animations-requirements .ua-animations-requirements-input {
+    margin: 10px 0 0 0;
+}
+.theme-dark div.ua-animations .ua-animations-effects .ua-animations-effects-effect {
+    background: color-mix(in oklab, var(--color-cool-4), transparent 50%);
+}
+.theme-light div.ua-animations .ua-animations-effects .ua-animations-effects-effect {
+    background: color-mix(in oklab, rgba(0, 0, 0, 0.1), transparent 50%);
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect {
+    width: 100%;
+    border-radius: 4px;
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect .ua-animations-effects-header {
+    padding: 10px;
+    width: 100%;
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect .ua-animations-effects-header .ua-animations-effects-header-name {
+    text-align: center;
+    width: 100%;
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect .ua-animations-effects-inputs {
+    padding: 0 10px;
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect .ua-animations-effects-inputs .ua-animations-effects-input {
+    padding-bottom: 0.625em;
+    >label {
+        flex-basis: 20%;
+        flex-shrink: 0;
+    }
+    >a {
+        flex-basis: auto;
+        width: 100%;
+    }
+}
+div.ua-animations .ua-animations-effects .ua-animations-effects-effect .ua-animations-effects-inputs .ua-animations-effects-input .ua-animations-effects-input-radio {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

@@ -1,0 +1,133 @@
+<div class="ua-animations scrollable">
+    <fieldset class="ua-animations-info ua-fieldset">
+        <legend>{{localize 'UNIVERSALANIMATIONS.General.Info'}}</legend>
+        {{#each form.inputs}}
+            <div class="ua-animations-input ua-row input-section" data-section="info">
+                {{#if (eq type "radio")}}
+                    <a>{{localize label}}</a>
+                    {{#each options}}
+                        <input type="radio" name="{{../name}}" id="{{name}}" value="{{name}}" {{#if (eq name (nullCoOp ../value false))}}checked{{/if}}>
+                        <label for="{{name}}">{{localize label}}</label>
+                    {{/each}}
+                {{else if (eq type "text")}}
+                    <label for="{{id}}">{{localize label}}</label>
+                    <input type="text" name="{{name}}" id="{{id}}" value="{{value}}">
+                {{else if (eq type "select")}}
+                    <label for="{{id}}">{{localize label}}</label>
+                    <select id="{{id}}" name="{{name}}">
+                        {{#each options}}
+                            <option value="{{name}}" {{#if (eq name ../value)}}selected{{/if}}>{{localize label}}</option>
+                        {{/each}}
+                    </select>
+                {{else if (eq type "selectMultiple")}}
+                    <label for="{{id}}">{{localize label}}</label>
+                    <multi-select id="{{id}}" name="{{name}}">
+                        {{#each options}}
+                            <option value="{{name}}" {{#if (incl ../value name)}}selected{{/if}}>{{localize label}}</option>
+                        {{/each}}
+                    </multi-select>
+                {{else}}
+                    <div class="ua-animations-requirements">
+                        <div class="ua-animations-requirements-header ua-row">
+                            <a><i>
+                                <span class="ua-animations-requirements-label">{{localize label}}</span>
+                                <span class="ua-animations-requirements-value">{{#if value}}{{value.length}}{{else}}0{{/if}}</span>
+                            </i></a>
+                            <span class="ua-animations-requirements-buttons">
+                                {{#each buttons}}
+                                    <button type="{{type}}" name="{{name}}" data-action="{{action}}">{{localize label}}</button>
+                                {{/each}} 
+                            </span>
+                        </div>
+                        <div class="ua-fade-line"></div>
+                        <div class="ua-animations-requirements-inputs">
+                            {{#each value}}
+                                <div class="ua-animations-requirements-input ua-row input-section" data-section="requirement" id="requirement-{{@index}}">
+                                    <input type="text" id="{{@index}}-key" name="{{@index}}-key" value="{{key}}">
+                                    <input type="text" id="{{@index}}-value" name="{{@index}}-value" value="{{value}}">
+                                    <button class="ua-animations-requirements-input-requirement-delete" data-action="deleteRequirement"><icon class="fa-solid fa-minus"></icon></button>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+        </div>
+        {{/each}}
+    </fieldset>
+    <fieldset class="ua-animations-effects ua-fieldset">
+        <legend>{{localize 'UNIVERSALANIMATIONS.SettingsMenu.Effects.Label'}}</legend>
+        {{#each form.effects}}
+            <div class="ua-animations-effects-effect" id="{{id}}">
+                <a class="ua-animations-effects-header ua-row ua-accordion-button {{accordionButtonClass}}">
+                    <icon class="fa-solid fa-minus"></icon>
+                    <span class="ua-animations-effects-header-name">{{localize "UNIVERSALANIMATIONS.General.Effect"}}</span>
+                    <icon class="fa-solid fa-chevron-right"></icon>
+                </a>
+                <div class="ua-animations-effects-inputs ua-accordion {{accordionClass}}">
+                    {{#each inputs}}
+                        <div class="ua-animations-effects-input ua-row input-section" data-section="effects" data-index="{{@../index}}">
+                            {{#if (eq inputType "radio")}}
+                                <a>{{localize label}}</a>
+                                {{#each options}}
+                                    <div class="ua-animations-effects-input-radio">
+                                        <input type="radio" name="{{../name}}" id="{{name}}" value="{{name}}" {{#if (eq name ../value)}}checked{{/if}}>
+                                        <label for="{{name}}">{{localize label}}</label>
+                                    </div>
+                                {{/each}}
+                            {{else if (eq inputType "text")}}
+                                <label for="{{id}}">{{localize label}}</label>
+                                <input type="text" name="{{name}}" id="{{id}}" value="{{value}}">
+                            {{else if (eq inputType "select")}}
+                                <label for="{{id}}">{{localize label}}</label>
+                                <select id="{{id}}" name="{{name}}">
+                                    {{#each options}}
+                                        <option value="{{name}}" {{#if (eq name ../value)}}selected{{/if}}>{{localize label}}</option>
+                                    {{/each}}
+                                </select>
+                            {{else if (eq inputType "selectMultiple")}}
+                                <label for="{{id}}">{{localize label}}</label>
+                                <multi-select id="{{id}}" name="{{name}}">
+                                    {{#each options}}
+                                        <option value="{{name}}" {{#if (incl ../value name)}}selected{{/if}}>{{localize label}}</option>
+                                    {{/each}}
+                                </multi-select>
+                            {{else if (eq inputType "multiText")}}
+                                <label for="{{id}}">{{localize label}}</label>
+                                {{#forNum inputAmount}}
+                                    <input type="text" name="{{../name}}-{{this}}" id="{{../id}}-{{this}}" value="{{lookup ../value this}}">
+                                {{/forNum}}
+                            {{else if (eq inputType "combination")}}
+                                <label for="{{id}}">{{localize label}}</label>
+                                {{#each inputAmount}}
+                                    {{#if (eq type "select")}}
+                                        <select id="{{../id}}-{{@index}}" name="{{../name}}-{{@index}}">
+                                            {{#each ../options}}
+                                                <option value="{{name}}" {{#if (eq name (lookup ../value @index))}}selected{{/if}}>{{localize label}}</option>
+                                            {{/each}}
+                                        </select>
+                                    {{else if (eq type "text")}}
+                                        {{#forNum amount}}
+                                            <input type="text" name="{{../../name}}-{{addition this 1}}" id="{{../../id}}-{{addition this 1}}" value="{{lookup ../../value (addition this 1)}}">
+                                        {{/forNum}}
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                        </div>
+                    {{/each}}
+                    <div class="ua-animations-effects-input ua-row input-section" data-section="addProperty" data-index="{{@index}}">
+                        <a>{{localize "UNIVERSALANIMATIONS.AnimationMenu.AddProperty"}}</a>
+                        <select id="selectProperty" name="selectProperty">
+                            <option value="" selected></option>
+                            {{#each availableProperties}}
+                                <option value="{{this}}">{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+        {{#each form.buttons}}
+            <button type="{{type}}" class="{{class}} ua-wide" data-action="{{action}}" name="{{name}}">{{localize label}}</button>
+        {{/each}}
+    </fieldset>
+</div>
