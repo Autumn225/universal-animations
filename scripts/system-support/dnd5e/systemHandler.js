@@ -128,19 +128,9 @@ export function systemHooks() {
         if (data.item.system?.properties?.has('fir')) firearm(data);
         data.hasAmmunition = data.item.system?.properties.has('amm');
         function firearm(data) {
-            let dice;
-            let damageType;
-            if (game.system.version.split('.')[0] > 3) {
-                dice = data.activity?.damage.parts[0]?.number;
-                damageType = data.activity?.damage.parts[0]?.types.first();
-            } else {
-                dice = data.item?.system.damage.parts[0]?.[0]?.charAt(0);
-                damageType = data.item?.system.damage.parts[0]?.[1];
-            }
-            
-            if (dice == 1) data.baseItem = 'firearmRenaissance';
-            else if (dice == 2) data.baseItem = 'firearmModern';
-            else if (['necrotic', 'radiant'].includes(damageType)) data.baseItem = 'firearmFuturistic';
+            if (data.activity?.damage?.parts[0]?.number == 1) data.baseItem = 'firearmRenaissance';
+            else if (data.activity?.damage?.parts[0]?.number == 2) data.baseItem = 'firearmModern';
+            else if (['necrotic', 'radiant'].includes(data.activity?.damage?.parts[0]?.types.first())) data.baseItem = 'firearmFuturistic';
         }
         data.properties = data.item.system?.properties;
         if (data.item.system?.rarity) data.itemRarity = data.item.system.rarity;
