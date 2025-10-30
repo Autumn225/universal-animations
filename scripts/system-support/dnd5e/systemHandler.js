@@ -131,11 +131,11 @@ export function systemHooks() {
             let dice;
             let damageType;
             if (game.system.version.split('.')[0] > 3) {
-                dice = data.activity?.damage?.parts[0].number;
-                damageType = data.activity?.damage?.parts[0].types.first();
+                dice = data.activity?.damage.parts[0]?.number;
+                damageType = data.activity?.damage.parts[0]?.types.first();
             } else {
-                dice = data.item?.system?.damage?.parts[0][0].charAt(0);
-                damageType = data.item?.system?.damage?.parts[0][1];
+                dice = data.item?.system.damage.parts[0]?.[0]?.charAt(0);
+                damageType = data.item?.system.damage.parts[0]?.[1];
             }
             
             if (dice == 1) data.baseItem = 'firearmRenaissance';
