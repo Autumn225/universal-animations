@@ -128,9 +128,9 @@ export function systemHooks() {
         if (data.item.system?.properties?.has('fir')) firearm(data);
         data.hasAmmunition = data.item.system?.properties.has('amm');
         function firearm(data) {
-            if (data.activity?.damage?.parts[0][0].charAt(0) == 1) data.baseItem = 'firearmRenaissance';
-            else if (data.activity?.damage?.parts[0][0].charAt(0) == 2) data.baseItem = 'firearmModern';
-            else if (['necrotic', 'radiant'].includes(data.activity?.damage?.parts[0][1])) data.baseItem = 'firearmFuturistic';
+            if (data.activity?.damage?.parts[0]?.number == 1) data.baseItem = 'firearmRenaissance';
+            else if (data.activity?.damage?.parts[0]?.number == 2) data.baseItem = 'firearmModern';
+            else if (['necrotic', 'radiant'].includes(data.activity?.damage?.parts[0]?.types.first())) data.baseItem = 'firearmFuturistic';
         }
         data.properties = data.item.system?.properties;
         if (data.item.system?.rarity) data.itemRarity = data.item.system.rarity;
